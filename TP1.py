@@ -17,7 +17,7 @@ class grafo:
 
 		self.d = self.arquivo.readline(3).split() #variavel para ver se o grafo e direcionado ou nao
 
-		self.qtAresta = len(self.arquivo.readlines())#armazrnando a quantidade de aresta em qtAresta
+		self.qtAresta = len(self.arquivo.readlines())#armazenando a quantidade de aresta em qtAresta
 
 		#fechando arquivo
 		self.arquivo.close()
@@ -29,17 +29,12 @@ class grafo:
 	#funcao que le o arquivo e armazena o grafo em uma matriz de adjacencia
 	def lerArquivo(self):
 		self.arquivo = open(self.nomeArq, 'rw')
-		x, y = 0, 0
 		for linha in self.arquivo:
 			vertice = linha.split() #pega cada linha do arquivo e separa o conteudo
 			if len(vertice) == 2: #entra quando tiver 2 conteudos em 1 linha no caso 2 arestas
-				x+=4
-				y+=4
 				verticeX = int(vertice[0])
 				verticeY = int(vertice[1])
 				self.ma[verticeX][verticeY] = 1
-			else:
-				x = 0
 		self.arquivo.close()
 
 	#funcao que converte matriz de adjacencia em lista de adjacencia
