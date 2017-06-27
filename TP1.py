@@ -39,14 +39,16 @@ class grafo:
 
 	#funcao que converte matriz de adjacencia em lista de adjacencia
 	def maTOla(self):
-		la=[]
+		la={} #criando dicionario
+		la1=[] #criando lista
 		for pos_linha in range(len(self.ma)):
-			la.append([]) # cria uma lista dentro de L para cada vertice 
+			la1.append([]) # cria uma lista dentro de la1 para cada vertice 
 			for pos_coluna in range(len(self.ma[0])):
 				if self.ma[pos_linha][pos_coluna] == 1: 
-					la[pos_linha].append(pos_coluna) # adiciona os vertices que fazem ligacao com 1 vertice
+					la1[pos_linha].append(pos_coluna) # adiciona os vertices que fazem ligacao com 1 vertice
 				else:
-					la[pos_linha]
+					la1[pos_linha]
+			la[pos_linha] = la1[pos_linha] #adiciona as lista no dicionario
 		return la
 
 	#funcao que converte matriz de adjacencia em matriz de incidencia
@@ -73,10 +75,26 @@ class grafo:
 		  			qt+=1
 		return mc
 
+	#funcao de busca em largura, que retorna o caminho apartir de um vertice inicial
+	#https://stackoverflow.com/questions/24895564/python-dfs-optimised-algorithm
+	#http://code.activestate.com/recipes/576723-dfs-and-bfs-graph-traversal/
+	def bfs(self, start, la):
+		path = [] #caminho percorrido
+		Q = [start]
+		while Q:
+			i = 0
+			v = Q.pop(0)
+			if not v in path:
+				path.append(v)
+				Q = Q + la[v]
+		return path
+	
 #main
 if __name__ == "__main__":
-    g = grafo()
-    g.lerArquivo()
-    print g.ma
-    print g.maTOla()
-    print g.maTOmc()
+	g = grafo()
+	g.lerArquivo()
+	#print g.ma
+	#print g.maTOla()
+	#print g.maTOmc()
+	la = g.maTOla()
+	print g.bfs(0, la)
