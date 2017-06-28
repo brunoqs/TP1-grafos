@@ -57,17 +57,15 @@ class grafo:
 	def maTOmc(self):
 		if self.d[0] == "UNDIRECTED":
 			w, h = self.qtAresta, self.qtVertice
-			mc = [[0 for i in range(w)] for j in range(h)]
+			mc = [[0 for i in range(h)] for j in range(w)]
 			maDiv = np.triu(self.ma, k=0) #pega a matriz triangular superior
 		else:
 			w, h = self.qtAresta, self.qtVertice
-			mc = [[0 for i in range(w)] for j in range(h)]
+			mc = [[0 for i in range(h)] for j in range(w)]
 			maDiv = self.ma
 
 		qt = 0
 		for pos_linha in range(len(maDiv)):
-			if qt > self.qtAresta:
-		  		break
 		  	for pos_coluna in range(len(maDiv[0])):
 		  		if maDiv[pos_linha][pos_coluna] == 1:
 		  			if self.d[0] == "UNDIRECTED":
@@ -77,7 +75,6 @@ class grafo:
 		  				mc[qt][pos_coluna] = -1
 		  				mc[qt][pos_linha] = 1
 		  			qt+=1
-		  			print qt
 		return mc
 
 	#funcao de busca em largura, que retorna o caminho apartir de um vertice inicial
