@@ -2,6 +2,7 @@
 
 import sys
 import numpy as np #biblioteca usada para pegar a matriz triangular 
+import copy
 
 class grafo:
 
@@ -54,14 +55,14 @@ class grafo:
 		return la
 
 	#funcao que converte matriz de adjacencia em matriz de incidencia
-	def maTOmc(self):
+	def maTOmi(self):
 		if self.d[0] == "UNDIRECTED":
 			w, h = self.qt_aresta, self.qt_vertice
-			mc = [[0 for i in range(h)] for j in range(w)]
+			mi = [[0 for i in range(h)] for j in range(w)]
 			ma_div = np.triu(self.ma, k=0) #pega a matriz triangular superior
 		else:
 			w, h = self.qt_aresta, self.qt_vertice
-			mc = [[0 for i in range(h)] for j in range(w)]
+			mi = [[0 for i in range(h)] for j in range(w)]
 			ma_div = self.ma
 
 		qt = 0
@@ -69,25 +70,25 @@ class grafo:
 		  	for pos_coluna in range(len(ma_div[0])):
 		  		if ma_div[pos_linha][pos_coluna] == 1:
 		  			if self.d[0] == "UNDIRECTED":
-		  				mc[qt][pos_coluna] = 1
-		  				mc[qt][pos_linha] = 1
+		  				mi[qt][pos_coluna] = 1
+		  				mi[qt][pos_linha] = 1
 		  			else:
-		  				mc[qt][pos_coluna] = -1
-		  				mc[qt][pos_linha] = 1
+		  				mi[qt][pos_coluna] = -1
+		  				mi[qt][pos_linha] = 1
 		  			qt+=1
-		return mc
+		return mi
 
 	#funcao de busca em largura, que retorna o caminho apartir de um vertice inicial
 	#https://stackoverflow.com/questions/24895564/python-dfs-optimised-algorithm
 	#http://code.activestate.com/recipes/576723-dfs-and-bfs-graph-traversal/
-	def bfs(self, start, la):
+	def bfs(self, start, grafo):
 		path = [] #caminho percorrido
 		Q = [start]
 		while Q:
 			v = Q.pop(0)
-			if not v in path:
+			if not v in path and grafo[v]:
 				path.append(v)
-				Q = Q + la[v]
+				Q = Q + grafo[v]
 
 		return path
 
@@ -112,10 +113,10 @@ class grafo:
 
 	def verifica_conexo_direcionado(self,grafo):
 		caminho = []
-		ma = g.dfs_recursiva(la,0,caminho)
+		ma = self.dfs_recursiva(la,0,caminho)
 		print ma
-		G_T = g.grafo_transposto(g.ma)
-		mb = g.dfs_recursiva(G_T,0,caminho)
+		G_T = self.grafo_transposto(g.ma)
+		mb = self.dfs_recursiva(G_T,0,caminho)
 		print mb
 		ma.sort() #Ordena a lista
 		mb.sort()
@@ -125,31 +126,30 @@ class grafo:
 			return True
 
 	#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
-	def P2(self, la):
-		backup = []
-		backup2 = {}
-		tamLa = len(la)
-		for a, vertice in la.iteritems():
-			backup = vertice
-			print "bk1", backup
-			del la[a]
-			backup2 = la
-			print "bk2",backup2
-			for vertice2, aresta in la.iteritems(): # pega a lista de arestas referente a cada vertice
-				if aresta.count(a) == 1: # verifica se existe aresta do vertice removido na lista, se tiver ela e removida
-					aresta.remove(a)
-			if tamLa-1 > a:
-				print "a",la
-				print self.bfs(a+1 % tamLa, la)
-				la = backup2
-				la[a] = backup
+	def P2(self, grafo):
+		backup = {}
+		backup = copy.deepcopy(grafo) # faz um backup
+		for chave in la.keys():
+			del grafo[chave]
+			for a in grafo.values():
+				if chave in a:
+					a.remove(chave)
+			if chave == 0:
+				print self.bfs(1, grafo)
 			else:
-				break
+				print self.bfs(0, grafo)
+			grafo = copy.deepcopy(backup) # copia backup para grafo
+		
 
 	#Partindo de um vErtice qualquer, quantos outros vErtices podemos alcanCar no grafo?
 	def P3(self, vert):
 		return len(self.bfs(vert, self.maTOla()))
 
+	def desconexo(self, vert):
+		if len(self.bfs(vert, self.maTOla())) != self.qt_vertice:
+			print "E desconexo"
+
+#http://www.inf.ufsc.br/grafos/definicoes/definicao.html conceitos grafos
 #http://www3.ifrn.edu.br/~jurandy/fdp/doc/aprenda-python/index.html doc python br
 #main
 if __name__ == "__main__":
@@ -157,10 +157,26 @@ if __name__ == "__main__":
 	g.lerArquivo()
 	print np.matrix(g.ma)
 	print g.maTOla()
-	print np.matrix(g.maTOmc())
+	print np.matrix(g.maTOmi())
 	la = g.maTOla()
-	#print g.bfs(0, la)
-	#print g.P2(la)
-	#print g.P3(0)
-	res = g.verifica_conexo_direcionado(g.ma)
-	print 'Grafo conexo:',res
+	print g.bfs(0, la)
+	g.P2(la)
+	print g.P3(0)
+	g.desconexo(0)
+	print "grafo fortemente conexo", g.verifica_conexo_direcionado(g.ma)
+
+#aparentemente o main do jeito que o mayron viado vai querer
+#	if sys.agrv[2] == "-p1":
+#		if self.d[0] == "UNDIRECTED":
+
+#	elif sys.argv[3] == "-p2":
+#		if self.d[0] == "UNDIRECTED":
+
+#	elif sys.argv[4] == "-p3" and sys.argv[5] != "-p4" and sys.argv != "-p5":
+
+#	elif sys.argv[5] == "-p4":
+
+#	elif sys.argv[6] == "-p5":
+
+#	elif sys.argv[7] == "-p6":
+
