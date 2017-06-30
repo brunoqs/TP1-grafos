@@ -2,7 +2,7 @@
 
 import sys
 import numpy as np #biblioteca usada para pegar a matriz triangular 
-import copy
+import copy 
 
 class grafo:
 
@@ -11,7 +11,7 @@ class grafo:
 		self.nome_arq = sys.argv[1]
 		self.arquivo = open(self.nome_arq, 'rw') #abrindo arquivo
 
-		self.arquivo.readline() # lendo a primeira linha
+		self.arquivo.readline() # pula a primeira linha
 		self.d = self.arquivo.readline().split() #variavel para ver se o grafo e direcionado ou nao
 
 		self.arquivo.readline() # pula uma linha
@@ -31,11 +31,11 @@ class grafo:
 		self.arquivo = open(self.nome_arq, 'rw')
 		for linha in self.arquivo:
 			vertice = linha.split() #pega cada linha do arquivo e separa o conteudo
-			if len(vertice) == 2: #entra quando tiver 2 conteudos em 1 linha no caso 2 arestas
+			if len(vertice) == 2: #entra quando tiver 2 conteudos em 1 linha do arquivo no caso 2 vertices
 				vertice_x = int(vertice[0])
 				vertice_y = int(vertice[1])
 				self.ma[vertice_x][vertice_y] = 1
-				if self.d[0] == "UNDIRECTED":
+				if self.d[0] == "UNDIRECTED": #espelha a matriz se o grafo nao for direcionado
 					self.ma[vertice_y][vertice_x] = 1
 
 		self.arquivo.close()
@@ -45,13 +45,13 @@ class grafo:
 		la={} #criando dicionario
 		la1=[] #criando lista
 		for pos_linha in range(len(self.ma)):
-			la1.append([]) # cria uma lista dentro de la1 para cada vertice 
+			la1.append([]) # cria uma lista dentro da la1  
 			for pos_coluna in range(len(self.ma[0])):
 				if self.ma[pos_linha][pos_coluna] == 1: 
 					la1[pos_linha].append(pos_coluna) # adiciona os vertices que fazem ligacao com 1 vertice
 				else:
 					la1[pos_linha]
-			la[pos_linha] = la1[pos_linha] #adiciona as lista no dicionario
+			la[pos_linha] = la1[pos_linha] #adiciona as listas referente a cada vertice no dicionario
 		return la
 
 	#funcao que converte matriz de adjacencia em matriz de incidencia
@@ -65,17 +65,17 @@ class grafo:
 			mi = [[0 for i in range(h)] for j in range(w)]
 			ma_div = self.ma
 
-		qt = 0
+		aresta = 0
 		for pos_linha in range(len(ma_div)):
 		  	for pos_coluna in range(len(ma_div[0])):
 		  		if ma_div[pos_linha][pos_coluna] == 1:
 		  			if self.d[0] == "UNDIRECTED":
-		  				mi[qt][pos_coluna] = 1
-		  				mi[qt][pos_linha] = 1
+		  				mi[aresta][pos_coluna] = 1
+		  				mi[aresta][pos_linha] = 1
 		  			else:
-		  				mi[qt][pos_coluna] = -1
-		  				mi[qt][pos_linha] = 1
-		  			qt+=1
+		  				mi[aresta][pos_coluna] = -1
+		  				mi[aresta][pos_linha] = 1
+		  			aresta+=1
 		return mi
 
 	#funcao de busca em largura, que retorna o caminho apartir de um vertice inicial
@@ -88,9 +88,36 @@ class grafo:
 			v = Q.pop(0)
 			if not v in path and grafo[v]:
 				path.append(v)
-				Q = Q + grafo[v]
+				Q = Q + grafo[v] #empilha os vizinhos de 1 vertice
 
 		return path
+
+	#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
+	def P2(self, grafo):
+		vertices_removidos =[]
+		backup = {}
+		backup = copy.deepcopy(grafo) # faz um backup
+		for chave in grafo.keys():
+			del grafo[chave] # remove o vertice e suas arestas
+			for a in grafo.values(): 
+				if chave in a:
+					a.remove(chave) # remove arestas que interligava o vertice que foi removido
+			if chave == 0: 
+				if self.desconexo() == "Conexo":
+					if len(self.bfs(1, grafo)) < self.qt_vertice-1: # testa bfs pra ver se o grafo ficou desconexo
+						vertices_removidos.append(chave)
+				else:
+					if len(self.bfs(1, grafo)) < self.qt_vertice-2:
+						vertices_removidos.append(chave)
+			else:
+				if self.desconexo() == "Conexo":
+					if len(self.bfs(0, grafo)) < self.qt_vertice-1:
+						vertices_removidos.append(chave)
+				else:
+					if len(self.bfs(0, grafo)) < self.qt_vertice-2:
+						vertices_removidos.append(chave)
+			grafo = copy.deepcopy(backup) # copia backup para grafo
+		return vertices_removidos
 
 	#Realiza a busca em profundidade no grafo e retorna o caminho        
 	def dfs_recursiva(self, grafo, start, caminho):
@@ -113,11 +140,11 @@ class grafo:
 
 	def verifica_conexo_direcionado(self,grafo):
 		caminho = []
-		ma = self.dfs_recursiva(la,0,caminho)
-		print ma
-		G_T = self.grafo_transposto(g.ma)
+		ma = self.dfs_recursiva(grafo,0,caminho)
+		#print ma
+		G_T = self.grafo_transposto(self.ma)
 		mb = self.dfs_recursiva(G_T,0,caminho)
-		print mb
+		#print mb
 		ma.sort() #Ordena a lista
 		mb.sort()
 		if ma != mb:
@@ -125,29 +152,25 @@ class grafo:
 		else:
 			return True
 
-	#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
-	def P2(self, grafo):
-		backup = {}
-		backup = copy.deepcopy(grafo) # faz um backup
-		for chave in la.keys():
-			del grafo[chave]
-			for a in grafo.values():
-				if chave in a:
-					a.remove(chave)
-			if chave == 0:
-				print self.bfs(1, grafo)
-			else:
-				print self.bfs(0, grafo)
-			grafo = copy.deepcopy(backup) # copia backup para grafo
-		
-
-	#Partindo de um vErtice qualquer, quantos outros vErtices podemos alcanCar no grafo?
+	#Partindo de um vertice qualquer, quantos outros vertices podemos alcancar no grafo?
 	def P3(self, vert):
 		return len(self.bfs(vert, self.maTOla()))
 
-	def desconexo(self, vert):
-		if len(self.bfs(vert, self.maTOla())) != self.qt_vertice:
-			print "E desconexo"
+	def desconexo(self):
+		for linha in self.ma:
+			if linha.count(0) == self.qt_vertice:
+				conexao = "Desconexo"
+				break
+		return conexao
+
+	#O grafo e desconexo, (fracamente) conexo, semi-fortemente conexo ou fortemente conexo?
+	def P5(self):
+		if self.verifica_conexo_direcionado(self.maTOla()) == True:
+			print "Fortemente conexo"
+		elif self.desconexo() == "Desconexo":
+			print "Desconexo"
+
+# https://stackoverflow.com/questions/15646307/algorithm-for-diameter-of-graph ideia para implementar o diametro
 
 #http://www.inf.ufsc.br/grafos/definicoes/definicao.html conceitos grafos
 #http://www3.ifrn.edu.br/~jurandy/fdp/doc/aprenda-python/index.html doc python br
@@ -158,12 +181,12 @@ if __name__ == "__main__":
 	print np.matrix(g.ma)
 	print g.maTOla()
 	print np.matrix(g.maTOmi())
-	la = g.maTOla()
-	print g.bfs(0, la)
-	g.P2(la)
 	print g.P3(0)
-	g.desconexo(0)
-	print "grafo fortemente conexo", g.verifica_conexo_direcionado(g.ma)
+	la1 = g.maTOla()
+	print g.P2(la1)
+	g.P5()
+
+
 
 #aparentemente o main do jeito que o mayron viado vai querer
 #	if sys.agrv[2] == "-p1":
@@ -171,12 +194,18 @@ if __name__ == "__main__":
 
 #	elif sys.argv[3] == "-p2":
 #		if self.d[0] == "UNDIRECTED":
+#			la = g.maTOla()
+#			g.P2(la)
 
-#	elif sys.argv[4] == "-p3" and sys.argv[5] != "-p4" and sys.argv != "-p5":
+#	elif sys.argv[4] == "-p3" and sys.argv[5] != "-p4" or sys.argv[6] != "-p5":
+#		if sys.argv[5] != "-p4":
+#			print g.P3(sys.argv[5])
+#		if sys.argv[6] != "-p5":
+#			print g.P3(sys.argv[6])
 
 #	elif sys.argv[5] == "-p4":
 
 #	elif sys.argv[6] == "-p5":
-
+#		g.P5()
 #	elif sys.argv[7] == "-p6":
 
