@@ -89,8 +89,14 @@ class grafo:
 			if not v in path and grafo[v]:
 				path.append(v)
 				Q = Q + grafo[v] #empilha os vizinhos de 1 vertice
-
 		return path
+
+	#funcao busca em profundidade
+	def DFS(self,v,grafo):
+		visitados = []
+		visited = [False]*(len(grafo))  # Cria uma lista com o numero total de vertices, todos os valores igual a False
+		visitados = g.visitado_lista(v,visited,grafo,visitados)
+		return visitados
 
 	#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
 	def P2(self, grafo):
@@ -136,13 +142,14 @@ class grafo:
 				linha.append(grafo[i][j])
 				grafo_transp.append(linha)
 		return grafo_transp
-        
+
+    #Funcao recebe uma grafo como lista   
 	def verifica_conexo_direcionado(self,grafo):
 		caminho = []
-		ma = self.dfs_recursiva(grafo,0,caminho)
+		ma = self.DFS(0, grafo) #Faz a busca em profundidade e retorna uma lista 
 		#print ma
-		G_T = self.grafo_transposto(self.ma)
-		mb = self.dfs_recursiva(G_T,0,caminho)
+		G_T = self.grafo_transposto(self.ma) #calcula a matriz transposta do grafo/ MAS RETORNA O GRAFO COMO LISTA DE ADJ
+		mb = self.DFS(0,G_T) #faz a busca em profundidade no grafo como lista
 		#print mb
 		ma.sort() #Ordena a lista
 		mb.sort()
@@ -178,12 +185,6 @@ class grafo:
 			if visited[i] == False:          
 				g.visitado_lista(i, visited,grafo,visitados)
 		return visitados
-                
-	def DFS(self,v,grafo):
-		visitados = []
-		visited = [False]*(len(grafo))  # Cria uma lista com o numero total de vertices, todos os valores igual a False
-		visitados = g.visitado_lista(v,visited,grafo,visitados)
-		return visitados
 
 	def ponte_busca(self,u,visitado,parentes,low,disc,grafo,Time):
 		children = 0  
@@ -203,7 +204,7 @@ class grafo:
 					return False
 			elif v != parentes[u]:
 				low[u] = min(low[u], disc[v])
-				
+
 	#Se for conexo, qual aresta que se retirada o torna desconexo? Existe apenas uma oumais arestas com essa peculiaridade?
 	def P1(self,grafo,V):
 		Time = 0 #Inicia o tempo com zero
