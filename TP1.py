@@ -94,7 +94,7 @@ class grafo:
 
 	#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
 	def P2(self, grafo):
-		vertices_removidos =[]
+		vertices_removidos = []
 		backup = {}
 		backup = copy.deepcopy(grafo) # faz um backup
 		for chave in grafo.keys():
@@ -103,18 +103,18 @@ class grafo:
 				if chave in a:
 					a.remove(chave) # remove arestas que interligava o vertice que foi removido
 			if chave == 0: 
-				if self.desconexo() == "Conexo":
-					if len(self.bfs(1, grafo)) < self.qt_vertice-1: # testa bfs pra ver se o grafo ficou desconexo
+				if self.desconexo() == "Desconexo":
+					if len(self.bfs(1, grafo)) < self.qt_vertice-2: # testa bfs pra ver se o grafo ficou desconexo
 						vertices_removidos.append(chave)
 				else:
-					if len(self.bfs(1, grafo)) < self.qt_vertice-2:
+					if len(self.bfs(1, grafo)) < self.qt_vertice-1:
 						vertices_removidos.append(chave)
 			else:
-				if self.desconexo() == "Conexo":
-					if len(self.bfs(0, grafo)) < self.qt_vertice-1:
+				if self.desconexo() == "Desconexo":
+					if len(self.bfs(0, grafo)) < self.qt_vertice-2:
 						vertices_removidos.append(chave)
 				else:
-					if len(self.bfs(0, grafo)) < self.qt_vertice-2:
+					if len(self.bfs(0, grafo)) < self.qt_vertice-1:
 						vertices_removidos.append(chave)
 			grafo = copy.deepcopy(backup) # copia backup para grafo
 		return vertices_removidos
@@ -137,7 +137,6 @@ class grafo:
 				grafo_transp.append(linha)
 		return grafo_transp
         
-
 	def verifica_conexo_direcionado(self,grafo):
 		caminho = []
 		ma = self.dfs_recursiva(grafo,0,caminho)
@@ -158,10 +157,12 @@ class grafo:
 
 	def desconexo(self):
 		for linha in self.ma:
-			if linha.count(0) == self.qt_vertice:
+			if linha.count(0) == self.qt_vertice: #se uma linha da matriz for 0, entao o grafo e desconexo
 				conexao = "Desconexo"
-				break
-		return conexao
+				return conexao
+			else:
+				conexao = "indefinido"
+				return conexao
 
 	#O grafo e desconexo, (fracamente) conexo, semi-fortemente conexo ou fortemente conexo?
 	def P5(self):
@@ -170,8 +171,55 @@ class grafo:
 		elif self.desconexo() == "Desconexo":
 			print "Desconexo"
 
+	def visitado_lista(self,v,visited,grafo,visitados):
+		visited[v] = True #Marca o vertice como visitado
+		visitados.append(v)
+		for i in grafo[v]:
+			if visited[i] == False:          
+				g.visitado_lista(i, visited,grafo,visitados)
+		return visitados
+                
+	def DFS(self,v,grafo):
+		visitados = []
+		visited = [False]*(len(grafo))  # Cria uma lista com o numero total de vertices, todos os valores igual a False
+		visitados = g.visitado_lista(v,visited,grafo,visitados)
+		return visitados
+
+	def ponte_busca(self,u,visitado,parentes,low,disc,grafo,Time):
+		children = 0  
+		visitado[u] = True #vertice de inicio marcado como visitado
+		disc[u] = Time #vertice acima marcado com tempo 0
+		low[u] = Time #vertice abaixo marcado com tempo 0
+		Time += 1 # imcremento no tempo
+		for v in grafo[u]: # executa ate o vertice de busca
+			if visitado[v] == False:
+				parentes[v] = u
+				children+= 1
+				g.ponte_busca(v,visitado,parentes,low,disc,grafo,Time) #BFS 
+				low[u] = min(low[u], low[v])
+				if low[v] > disc[u]:	
+					print 'Ponte(s):', u,v
+				else:
+					return False
+			elif v != parentes[u]:
+				low[u] = min(low[u], disc[v])
+				
+	#Se for conexo, qual aresta que se retirada o torna desconexo? Existe apenas uma oumais arestas com essa peculiaridade?
+	def P1(self,grafo,V):
+		Time = 0 #Inicia o tempo com zero
+		visitado = [False] * (len(grafo)) #lista com False/ lista com a mesma quantidade de vertices
+		disc = [float("Inf")] * (len(grafo)) #lisca com tempo-Inf /lista com a mesma quantidade de vertices
+		low = [float("Inf")] * (len(grafo)) #lista com tempo-Inf / lista com a mesma quantidade de vertices
+		parentes = g.DFS(V,grafo)#lista com os vertices percorridos com uma DFS
+		for i in range(len(grafo[V])):# for ate o numero de vertices
+			if visitado[i] == False:# se o vertice nao foi visitado chama a funcao de busca de ponte
+				res =  g.ponte_busca(i,visitado,parentes,low,disc,grafo,Time)
+			if res == False:#se o retorno for igual a False o grafo nao tem pontes
+				print "O grafo nao possui pontes"
+
 # https://stackoverflow.com/questions/15646307/algorithm-for-diameter-of-graph ideia para implementar o diametro
 
+#http://ctr.wikia.com/wiki/Find_the_graph_diameter diametro
 #http://www.inf.ufsc.br/grafos/definicoes/definicao.html conceitos grafos
 #http://www3.ifrn.edu.br/~jurandy/fdp/doc/aprenda-python/index.html doc python br
 #main
@@ -182,30 +230,34 @@ if __name__ == "__main__":
 	print g.maTOla()
 	print np.matrix(g.maTOmi())
 	print g.P3(0)
-	la1 = g.maTOla()
-	print g.P2(la1)
+	la = g.maTOla()
+	print g.P2(la)
 	g.P5()
+	la1 = g.maTOla()
+	g.P1(la1,0)
 
 
 
 #aparentemente o main do jeito que o mayron viado vai querer
-#	if sys.agrv[2] == "-p1":
-#		if self.d[0] == "UNDIRECTED":
-
-#	elif sys.argv[3] == "-p2":
-#		if self.d[0] == "UNDIRECTED":
+#	if sys.argv[2] == "-p1":
+#		if g.d[0] == "UNDIRECTED":
+#			print "TODO"
+#	if sys.argv[3] == "-p2":
+#		if g.d[0] == "UNDIRECTED":
 #			la = g.maTOla()
-#			g.P2(la)
-
-#	elif sys.argv[4] == "-p3" and sys.argv[5] != "-p4" or sys.argv[6] != "-p5":
+#			print g.P2(la)
+#
+#	if sys.argv[4] == "-p3" and sys.argv[5] != "-p4" or sys.argv[6] != "-p5":
 #		if sys.argv[5] != "-p4":
-#			print g.P3(sys.argv[5])
+#			print g.P3(int(sys.argv[5]))
 #		if sys.argv[6] != "-p5":
-#			print g.P3(sys.argv[6])
-
-#	elif sys.argv[5] == "-p4":
-
-#	elif sys.argv[6] == "-p5":
+#			print g.P3(int(sys.argv[6]))
+#
+#	if sys.argv[5] == "-p4":
+#		print "TODO"
+#	if sys.argv[6] == "-p5":
 #		g.P5()
-#	elif sys.argv[7] == "-p6":
+#	if sys.argv[7] == "-p6":
+#		if g.d[0] == "DIRECTED":
+#			print "TODO"
 
