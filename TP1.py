@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+from collections import defaultdict
 import sys
 import numpy as np #biblioteca usada para pegar a matriz triangular 
 import copy 
+import pdb
 
 class grafo:
 
@@ -95,7 +97,7 @@ class grafo:
 	def DFS(self,v,grafo):
 		visitados = []
 		visited = [False]*(len(grafo))  # Cria uma lista com o numero total de vertices, todos os valores igual a False
-		visitados = g.visitado_lista(v,visited,grafo,visitados)
+		visitados = self.visitado_lista(v,visited,grafo,visitados)
 		return visitados
 
 	#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
@@ -109,29 +111,21 @@ class grafo:
 				if chave in a:
 					a.remove(chave) # remove arestas que interligava o vertice que foi removido
 			if chave == 0: 
-				if self.desconexo() == "Desconexo":
+				if self.desconexo() == True:
 					if len(self.bfs(1, grafo)) < self.qt_vertice-2: # testa bfs pra ver se o grafo ficou desconexo
 						vertices_removidos.append(chave)
 				else:
 					if len(self.bfs(1, grafo)) < self.qt_vertice-1:
 						vertices_removidos.append(chave)
 			else:
-				if self.desconexo() == "Desconexo":
+				if self.desconexo() == True:
 					if len(self.bfs(0, grafo)) < self.qt_vertice-2:
 						vertices_removidos.append(chave)
 				else:
 					if len(self.bfs(0, grafo)) < self.qt_vertice-1:
 						vertices_removidos.append(chave)
 			grafo = copy.deepcopy(backup) # copia backup para grafo
-		return vertices_removidos
-
-	#Realiza a busca em profundidade no grafo e retorna o caminho        
-	def dfs_recursiva(self, grafo, start, caminho):
-		caminho = caminho + [start]
-		for node in grafo[start]:
-			if not node in caminho:
-				caminho = self.dfs_recursiva(grafo, node, caminho)
-		return caminho                              
+		return vertices_removidos                            
 
 	#pega um grafo representado em matriz de adj e calcula o grafo transposto
 	def grafo_transposto(self,grafo):
@@ -165,17 +159,17 @@ class grafo:
 	def desconexo(self):
 		for linha in self.ma:
 			if linha.count(0) == self.qt_vertice: #se uma linha da matriz for 0, entao o grafo e desconexo
-				conexao = "Desconexo"
+				conexao = True
 				return conexao
 			else:
-				conexao = "indefinido"
-				return conexao
+				conexao = False
+		return conexao
 
 	#O grafo e desconexo, (fracamente) conexo, semi-fortemente conexo ou fortemente conexo?
 	def P5(self):
 		if self.verifica_conexo_direcionado(self.maTOla()) == True:
 			print "Fortemente conexo"
-		elif self.desconexo() == "Desconexo":
+		elif self.desconexo() == True:
 			print "Desconexo"
 
 	def visitado_lista(self,v,visited,grafo,visitados):
@@ -183,11 +177,10 @@ class grafo:
 		visitados.append(v)
 		for i in grafo[v]:
 			if visited[i] == False:          
-				g.visitado_lista(i, visited,grafo,visitados)
+				self.visitado_lista(i, visited,grafo,visitados)
 		return visitados
 
-	def ponte_busca(self,u,visitado,parentes,low,disc,grafo,Time):
-		children = 0  
+	def ponte_busca(self,u,visitado,low,disc,grafo,Time,parentes,a):
 		visitado[u] = True #vertice de inicio marcado como visitado
 		disc[u] = Time #vertice acima marcado com tempo 0
 		low[u] = Time #vertice abaixo marcado com tempo 0
@@ -195,28 +188,29 @@ class grafo:
 		for v in grafo[u]: # executa ate o vertice de busca
 			if visitado[v] == False:
 				parentes[v] = u
-				children+= 1
-				g.ponte_busca(v,visitado,parentes,low,disc,grafo,Time) #BFS 
+				parentes.append([])#Ganbiara kkkkkk 
+				self.ponte_busca(v,visitado,low,disc,grafo,Time,parentes,a) #BFS 
 				low[u] = min(low[u], low[v])
 				if low[v] > disc[u]:	
 					print 'Ponte(s):', u,v
-				else:
-					return False
+					a.append('Inf')
 			elif v != parentes[u]:
 				low[u] = min(low[u], disc[v])
+		return a
 
 	#Se for conexo, qual aresta que se retirada o torna desconexo? Existe apenas uma oumais arestas com essa peculiaridade?
 	def P1(self,grafo,V):
+		a = []
+		parentes = g.DFS(V,grafo)
 		Time = 0 #Inicia o tempo com zero
 		visitado = [False] * (len(grafo)) #lista com False/ lista com a mesma quantidade de vertices
 		disc = [float("Inf")] * (len(grafo)) #lisca com tempo-Inf /lista com a mesma quantidade de vertices
 		low = [float("Inf")] * (len(grafo)) #lista com tempo-Inf / lista com a mesma quantidade de vertices
-		parentes = g.DFS(V,grafo)#lista com os vertices percorridos com uma DFS
 		for i in range(len(grafo[V])):# for ate o numero de vertices
 			if visitado[i] == False:# se o vertice nao foi visitado chama a funcao de busca de ponte
-				res =  g.ponte_busca(i,visitado,parentes,low,disc,grafo,Time)
-			if res == False:#se o retorno for igual a False o grafo nao tem pontes
-				print "O grafo nao possui pontes"
+				res =  self.ponte_busca(i,visitado,low,disc,grafo,Time,parentes,a)
+		if res == []:#se o retorno for igual a False o grafo nao tem pontes
+			print "O grafo nao possui pontes"
 
 # https://stackoverflow.com/questions/15646307/algorithm-for-diameter-of-graph ideia para implementar o diametro
 
@@ -242,11 +236,12 @@ if __name__ == "__main__":
 #aparentemente o main do jeito que o mayron viado vai querer
 #	if sys.argv[2] == "-p1":
 #		if g.d[0] == "UNDIRECTED":
-#			print "TODO"
+#			la = g.maTOla()
+#			g.P1(la, 0)
 #	if sys.argv[3] == "-p2":
 #		if g.d[0] == "UNDIRECTED":
-#			la = g.maTOla()
-#			print g.P2(la)
+#			la1 = g.maTOla()
+#			print g.P2(la1)
 #
 #	if sys.argv[4] == "-p3" and sys.argv[5] != "-p4" or sys.argv[6] != "-p5":
 #		if sys.argv[5] != "-p4":
