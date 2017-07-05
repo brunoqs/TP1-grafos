@@ -5,6 +5,7 @@ import sys
 import numpy as np #biblioteca usada para pegar a matriz triangular 
 import copy 
 import pdb
+sys.setrecursionlimit(10000)
 
 class grafo:
 
@@ -138,7 +139,7 @@ class grafo:
 		return grafo_transp
 
     #Funcao recebe uma grafo como lista   
-	def verifica_conexo_direcionado(self,grafo):
+	def verifica_fortemente_conexo(self,grafo):
 		caminho = []
 		ma = self.DFS(0, grafo) #Faz a busca em profundidade e retorna uma lista 
 		#print ma
@@ -167,7 +168,7 @@ class grafo:
 
 	#O grafo e desconexo, (fracamente) conexo, semi-fortemente conexo ou fortemente conexo?
 	def P5(self):
-		if self.verifica_conexo_direcionado(self.maTOla()) == True:
+		if self.verifica_fortemente_conexo(self.maTOla()) == True:
 			print "Fortemente conexo"
 		elif self.desconexo() == True:
 			print "Desconexo"
@@ -180,16 +181,16 @@ class grafo:
 				self.visitado_lista(i, visited,grafo,visitados)
 		return visitados
 
-	def ponte_busca(self,u,visitado,low,disc,grafo,Time,parentes,a):
+	def ponte_busca(self,u,visitado,low,disc,grafo,time,parentes,a):
 		visitado[u] = True #vertice de inicio marcado como visitado
-		disc[u] = Time #vertice acima marcado com tempo 0
-		low[u] = Time #vertice abaixo marcado com tempo 0
-		Time += 1 # imcremento no tempo
+		disc[u] = time #vertice acima marcado com tempo 0
+		low[u] = time #vertice abaixo marcado com tempo 0
+		time += 1 # imcremento no tempo
 		for v in grafo[u]: # executa ate o vertice de busca
 			if visitado[v] == False:
 				parentes[v] = u
 				parentes.append([])#Ganbiara kkkkkk 
-				self.ponte_busca(v,visitado,low,disc,grafo,Time,parentes,a) #BFS 
+				self.ponte_busca(v,visitado,low,disc,grafo,time,parentes,a) #BFS 
 				low[u] = min(low[u], low[v])
 				if low[v] > disc[u]:	
 					print 'Ponte(s):', u,v
@@ -202,15 +203,48 @@ class grafo:
 	def P1(self,grafo,V):
 		a = []
 		parentes = g.DFS(V,grafo)
-		Time = 0 #Inicia o tempo com zero
+		time = 0 #Inicia o tempo com zero
 		visitado = [False] * (len(grafo)) #lista com False/ lista com a mesma quantidade de vertices
 		disc = [float("Inf")] * (len(grafo)) #lisca com tempo-Inf /lista com a mesma quantidade de vertices
 		low = [float("Inf")] * (len(grafo)) #lista com tempo-Inf / lista com a mesma quantidade de vertices
 		for i in range(len(grafo[V])):# for ate o numero de vertices
 			if visitado[i] == False:# se o vertice nao foi visitado chama a funcao de busca de ponte
-				res =  self.ponte_busca(i,visitado,low,disc,grafo,Time,parentes,a)
+				res =  self.ponte_busca(i,visitado,low,disc,grafo,time,parentes,a)
 		if res == []:#se o retorno for igual a False o grafo nao tem pontes
 			print "O grafo nao possui pontes"
+
+	#procura todos os caminhos de um vertice ate o outro
+	def bfs_all_paths(self, grafo,start, end, path =[]):
+		path.append(start) #coloca o novo vertice visitado
+
+		if start == end: #se o vertice de inicio for igual ao vertice fim retorna ele mesmo
+			print path
+		else:
+			for vertice in grafo[start]:
+				if vertice not in path: #recusao para todos os vertices adjacentes
+					self.bfs_all_paths(grafo, vertice, end, path)
+                     
+        # remove vertice atual
+		path.pop()
+		return path
+
+	#diametro do grafo
+	def diameter(self):
+		""" calculates the diameter of the graph """
+		v = self.qt_vertice 
+		pairs = [ (v[i],v[j]) for i in range(len(v)-1) for j in range(i+1, len(v))]
+		smallest_paths = []
+		for (s,e) in pairs:
+			paths = self.bfs_all_paths(s,e)
+			smallest = sorted(paths, key=len)[0]
+			smallest_paths.append(smallest)
+
+			smallest_paths.sort(key=len)
+
+        # longest path is at the end of list, 
+        # i.e. diameter corresponds to the length of this path
+		diameter = len(smallest_paths[-1]) - 1
+		return diameter
 
 # https://stackoverflow.com/questions/15646307/algorithm-for-diameter-of-graph ideia para implementar o diametro
 
@@ -221,16 +255,16 @@ class grafo:
 if __name__ == "__main__":
 	g = grafo()
 	g.lerArquivo()
-	print np.matrix(g.ma)
-	print g.maTOla()
-	print np.matrix(g.maTOmi())
-	print g.P3(0)
-	la = g.maTOla()
-	print g.P2(la)
+	#print np.matrix(g.ma)
+	#print g.maTOla()
+	#print np.matrix(g.maTOmi())
+	#print g.P3(0)
+	#la = g.maTOla()
+	#print g.P2(la)
 	g.P5()
 	la1 = g.maTOla()
 	g.P1(la1,0)
-
+	print g.bfs_all_paths(la1, 2, 3)
 
 
 #aparentemente o main do jeito que o mayron viado vai querer
@@ -255,5 +289,4 @@ if __name__ == "__main__":
 #		g.P5()
 #	if sys.argv[7] == "-p6":
 #		if g.d[0] == "DIRECTED":
-#			print "TODO"
-
+#			print "TOD
