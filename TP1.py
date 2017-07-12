@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 
-from collections import defaultdict
 import sys
 import numpy as np #biblioteca usada para pegar a matriz triangular 
-import copy 
-import pdb
-sys.setrecursionlimit(10000)
+sys.setrecursionlimit(10000) #pilha de recursao aumentada para 10000
 
 class grafo:
 
@@ -81,25 +78,21 @@ class grafo:
 		  			aresta+=1
 		return mi
 
-	#funcao de busca em largura, que retorna o caminho apartir de um vertice inicial
-	#https://stackoverflow.com/questions/24895564/python-dfs-optimised-algorithm
-	#http://code.activestate.com/recipes/576723-dfs-and-bfs-graph-traversal/
-	def bfs(self, inicio, grafo):
-		path = [] #caminho percorrido
-		Q = [inicio]
-		while Q:
-			v = Q.pop(0)
-			if not v in path and grafo[v]:
-				path.append(v)
-				Q = Q + grafo[v] #empilha os vizinhos de 1 vertice
-		return path
-
 	#funcao busca em profundidade
-	def DFS(self,v,grafo):
-		visitados = []
-		visited = [False]*(len(grafo))  # Cria uma lista com o numero total de vertices, todos os valores igual a False
-		visitados = self.visitado_lista(v,visited,grafo,visitados)
-		return visitados    
+	def DFS(self,v,grafo,flag = []):
+		if flag == []:
+		    visitados = []
+		    visited = [False]*len(grafo)  # Cria uma lista com o numero total de vertices, todos os valores igual a False
+		    visitados = self.visitado_lista(v,visited,grafo,visitados)
+		    return visitados
+		else:
+			visitados = []
+			visited = [False]*len(grafo)
+			for a,valor in enumerate(grafo):
+				if a == flag:
+					visited[a]=True
+		        visitados = self.visitado_lista(v,visited,grafo,visitados)
+		return visitados 
 
 	def visitado_lista(self,v,visited,grafo,visitados):
 		visited[v] = True #Marca o vertice como visitado
@@ -166,8 +159,9 @@ class grafo:
 				res =  self.ponte_busca(i,visitado,low,disc,grafo,time,parentes,a)
 		if res == []:#se o retorno for igual a False o grafo nao tem pontes
 			print "O grafo nao possui pontes"
+		return res
 
-	def ponte_busca(self,u,visitado,low,disc,grafo,time,parentes,a):
+	def ponte_busca(self,u,visitado,low,disc,grafo,time,parentes,a,total_pontes = []):
 		visitado[u] = True #vertice de inicio marcado como visitado
 		disc[u] = time #vertice acima marcado com tempo 0
 		low[u] = time #vertice abaixo marcado com tempo 0
@@ -176,66 +170,49 @@ class grafo:
 			if visitado[v] == False:
 				parentes[v] = u
 				parentes.append([])#Ganbiara kkkkkk 
-				self.ponte_busca(v,visitado,low,disc,grafo,time,parentes,a) #BFS 
+				self.ponte_busca(v,visitado,low,disc,grafo,time,parentes,a,total_pontes) #BFS 
 				low[u] = min(low[u], low[v])
 				if low[v] > disc[u]:	
 					print 'Ponte(s):', u,v
 					a.append('Inf')
+					total_pontes.append(u)
+					total_pontes.append(v)
+					
 			elif v != parentes[u]:
 				low[u] = min(low[u], disc[v])
-		return a
+		return list(set(total_pontes))
 
-		#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
-	def P2(self, grafo):
+	#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
+	def P2(self, grafo,total_pontes):
 		vertices_removidos = []
-		backup = {}
-		backup = copy.deepcopy(grafo) # faz um backup
-		for chave in grafo.keys():
-			del grafo[chave] # remove o vertice e suas arestas
-			for a in grafo.values(): 
-				if chave in a:
-					a.remove(chave) # remove arestas que interligava o vertice que foi removido
-			if chave == 0: 
-				if self.desconexo() == True:
-					if len(self.bfs(1, grafo)) < self.qt_vertice-2: # testa bfs pra ver se o grafo ficou desconexo
-						vertices_removidos.append(chave)
-				else:
-					if len(self.bfs(1, grafo)) < self.qt_vertice-1:
-						vertices_removidos.append(chave)
-			else:
-				if self.desconexo() == True:
-					if len(self.bfs(0, grafo)) < self.qt_vertice-2:
-						vertices_removidos.append(chave)
-				else:
-					if len(self.bfs(0, grafo)) < self.qt_vertice-1:
-						vertices_removidos.append(chave)
-			grafo = copy.deepcopy(backup) # copia backup para grafo
-		return vertices_removidos 
+		for chave in total_pontes:
+			val = g.DFS(min(total_pontes),grafo,chave)
+			if len(val) < len(grafo) - 1:
+				vertices_removidos.append(chave)        
+		return list(set(vertices_removidos))
 
 	#Partindo de um vertice qualquer, quantos outros vertices podemos alcancar no grafo?
 	def P3(self, vertice):
-		return len(self.bfs(vertice, self.maTOla()))-1
+		return len(self.DFS(vertice, self.maTOla()))-1
 
 	#diametro do grafo
 	def P4(self,grafo):
-		v = g.bfs(0,grafo)
-		pares = [ (v[i],v[j]) for i in range(len(v)-1) for j in range(i+1, len(v))]
+		v = g.DFS(0,grafo)
+		pares = [ (v[i],v[j]) for i in range(len(v)) for j in range(i+1, len(v))]
 		for (s,e) in pares:
 			caminhos = self.bfs_all_paths(grafo,s,e)
-			print "aq"
 		return max(caminhos)	
 
 	#procura todos os caminhos de um vertice ate o outro
 	def bfs_all_paths(self, grafo,inicio, fim,caminho =[],tam_caminho = []):
 		caminho.append(inicio) #coloca o novo vertice visitado
-		print "aq1"  
 		if inicio == fim: #se o vertice de inicio for igual ao vertice fim retorna ele mesmo
 			#print path
 			tam_caminho.append(len(caminho))    
 		else:
 			for vertice in grafo[inicio]:
 				if vertice not in caminho: #recusao para todos os vertices adjacentes
-					self.bfs_all_paths(grafo, vertice, fim, caminho, tam_caminho)
+					self.bfs_all_paths(grafo, vertice, fim)
 		caminho.pop()
 		return tam_caminho
 
@@ -290,6 +267,9 @@ class grafo:
 				conexao = False
 		return conexao
 
+	#http://www.geeksforgeeks.org/strongly-connected-components/
+	#def P6():
+
 # https://stackoverflow.com/questions/15646307/algorithm-for-diameter-of-graph ideia para implementar o diametro
 
 #http://ctr.wikia.com/wiki/Find_the_graph_diameter diametro
@@ -302,14 +282,14 @@ if __name__ == "__main__":
 	#print np.matrix(g.ma)
 	#print g.maTOla()
 	#print np.matrix(g.maTOmi())
-	#la1 = g.maTOla()
-	#g.P1(la1,0)
-	#la2 = g.maTOla()
-	#print g.P2(la2)
-	#print g.P3(0)
-	la = g.maTOla()
-	diameter = g.P4(la)
-	print(diameter)
+	la1 = g.maTOla()
+	la3 = g.P1(la1,0)
+	la2 = g.maTOla()
+	print g.P2(la2,la3)
+	print g.P3(0)
+	#la = g.maTOla()
+	#diameter = g.P4(la)
+	#print(diameter)
 	g.P5()
 	
 
