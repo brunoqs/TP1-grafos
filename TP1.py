@@ -153,24 +153,36 @@ class grafo:
 
 	#diametro do grafo
 	def P4(self,grafo):
-		v = g.DFS(0,grafo)
-		pares = [ (v[i],v[j]) for i in range(len(v)) for j in range(i+1, len(v))]
-		for (s,e) in pares:
-			caminhos = self.bfs_all_paths(grafo,s,e)
-		return max(caminhos)	
+		d = self.floyd_warshall(grafo)
+		print "P4: ",d
+	
+	def Matriz_floydwarshall(self,grafo):
+		INF = 99999999
+		matriz = [0]*len(grafo)
+		for i in range(len(grafo)):      
+			matriz[i] = [0]*len(grafo)
+			
+		for i,val in enumerate(grafo):
+			for j, valor in enumerate(val):
+				if grafo[i][j] == 0:
+					grafo[i][j] = INF
+                                    
+		return grafo
 
-	#procura todos os caminhos de um vertice ate o outro
-	def bfs_all_paths(self, grafo,inicio, fim,caminho =[],tam_caminho = []):
-		caminho.append(inicio) #coloca o novo vertice visitado
-		if inicio == fim: #se o vertice de inicio for igual ao vertice fim retorna ele mesmo
-			#print path
-			tam_caminho.append(len(caminho))    
-		else:
-			for vertice in grafo[inicio]:
-				if vertice not in caminho: #recusao para todos os vertices adjacentes
-					self.bfs_all_paths(grafo, vertice, fim)
-		caminho.pop()
-		return tam_caminho
+            
+	def floyd_warshall(self,grafo):
+		caminho = self.Matriz_floydwarshall(grafo)
+		size = len(caminho)
+		d = 0
+		for k in range(size):
+			for i in range(size):
+				for j in range(size):
+					menor = min(caminho[i][j],caminho[i][k] + caminho[k][j])
+					if menor != caminho[i][j]:
+						caminho[i][j] = menor
+						if menor > d:
+							d = menor
+		return d
 
 	#O grafo e desconexo, (fracamente) conexo, semi-fortemente conexo ou fortemente conexo?
 	def P5(self):
@@ -240,9 +252,7 @@ if __name__ == "__main__":
 	la2 = g.maTOla()
 	print "P2: ", g.P2(la2,la3)
 	print "P3: ", g.P3(0)
-	#la = g.maTOla()
-	#diameter = g.P4(la)
-	#print(diameter)
+	g.P4(g.ma)
 	g.P5()
 
 #aparentemente o main do jeito que o mayron viado vai querer
