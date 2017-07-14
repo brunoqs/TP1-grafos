@@ -1,0 +1,856 @@
+#construtor 
+__init__():
+	Contem nome do arquivo;
+	Contem uma variavel para saber se o grafo e direcionado ou nao
+	Contem uma variavel para determinar a quantidade de vertices, uma para
+	determinar a quantidade de arestas, e uma variavel para armazenar o grafo
+	em uma matriz de adjacencia
+
+#funçao ler arquivo e armazana em uma matriz de adjacencia
+lerArquivo():
+	abre arquivo
+	for each linha no arquivo:
+		fazer uma lista com os elementos presentes na linha
+		if len(lista) == 2: // se tiver 2 componentes na linha armazena na matriz
+			ma[x][y] = 1 // x e y sao os valores presente na linha
+		if grafo == "UNDIRECTED": // espelha a matriz se o grafo for nao direcionado
+			ma[y][x] = 1
+	fecha arquivo
+
+#funcao de conversao matriz de adjacencia para lista de adjacencia
+maTOla():
+	la = {} // cria dicionario vazio
+	la = []	// cria lista vazia
+	for i = 0 ate i = len(ma)
+		adiciona lista vazia dentro de la
+		for j ate j = len(ma)
+			if ma[i][j] == 1: // verifica se contem elementos na matriz
+				adiciona j na posicaçao i da lista
+		cada posicaçao i do dicionario recebe uma lista referente a posicao j
+	return lista de adjacencia
+
+#funcao que converte matriz de adjacencia em matriz de incidencia
+maTOmi():
+	if grafo == "UNDIRECTED":
+		ma_div = recebe uma matriz triangular superior
+	else:
+		ma_div = recebe a matriz de adjacencia completa
+
+	aresta = 0 // variavel de controle da linha da matriz
+	for i ate len(ma_div):
+		for j ate len(ma_div):
+			if ma_div[i][j] == 1: // se a matriz de adjacencia tiver valor
+				if grafo == "UNDIRECTED"://se for nao direcionado ele possui caminhos de ida e volta no grafo  	  
+					mi[aresta][j] = 1		
+					mi[aresta][i] = 1
+				else: // se for direcionado possui caminho so de ia ou so de volta 
+					mi[aresta][j] = -1
+					mi[aresta][i] = 1
+				aresta++
+	return mi // retorna matriz de incidencia
+
+DFS():
+
+visitado_lista():
+
+verifica_fortemente_conexo():
+
+grafo_transposto():
+
+#verifica se o grafo e desconexo
+desconexo():
+	for each linha in matriz:
+		if uma linha da matriz for 0:
+			grafo e desconexo
+		else:
+			grafo nao e desconexo
+	return conexo
+
+P1():
+
+ponte_busca():
+
+P2():
+
+#Partindo de um vertice qualquer, quantos outros vertices podemos alcancar no grafo?
+P3(vertice_qualquer):
+	return tamanho do caminho partindo de um vertice_qualquer -1
+
+#chama respectivas funçoes ja construidas para verificar a conexidade do grafo
+P5():
+	if verifica_fortemente_conexo(grafo) == TRUE
+		print "fortemente conexo"
+	elif desconexo() == TRUE and grafo == "UNDIRECTED":
+		print "desconexo"
+
+
+
+TEMPO DE EXECUÇAO TOTAL (P1,P2,P3,P5) REFERENTE A CADA ARQUIVO 
+
+/instances/artificial
+Instance1.txt
+Instance2.txt
+Instance3.txt
+Instance4.txt
+Instance5.txt
+Instance6.txt
+Instance7.txt
+Instance8.txt
+Instance9.txt
+Instance10.txt
+
+/instances/big_graphs
+Instance11.txt
+Instance12.txt
+Instance13.txt
+Instance14.txt
+facebook_combined.txt
+
+/instances/metro
+Athens.txt
+Barcelona.txt
+Berlin - U-bahn only.txt
+Boston.txt
+Brussels.txt
+Bucharest.txt
+Buenos Aires.txt
+Cairo.txt
+Chicago.txt
+Delhi.txt
+Hong Kong.txt
+Lisbon.txt
+London.txt
+Lyon.txt
+Madrid.txt
+Marseille.txt
+Mexico City.txt
+Milan.txt
+Montreal.txt
+Moscow.txt
+New York.txt
+Osaka.txt
+Paris.txt
+Prague.txt
+Rome.txt
+Seoul.txt
+Shanghai.txt
+Singapore.txt
+Stockholm.txt
+St Peterburg.txt
+Tokyo.txt
+Toronto.txt
+Washington DC.txt
+
+
+RESULTADO REFERENTE A CADA ARQUIVO 
+
+/instances/artificial
+
+Instance1.txt :
+P1: O grafo nao possui pontes
+P2: []
+P3: 9
+P4: Fortemente conexo
+
+Instance2.txt:
+P1 = Ponte(s): 14 5
+P2:  [14]
+P3:  18
+P5: Fortemente conexo
+
+Instance3.txt:
+P1 = Ponte(s): 22 10
+P1 = Ponte(s): 24 20
+P2:  [24, 22]
+P3:  29
+P5: Fortemente conexo
+
+Instance4.txt:
+P1: O grafo nao possui pontes
+P2:  []
+P3:  39
+P5: Fortemente conexo
+
+Instance5.txt:
+P1: O grafo nao possui pontes
+P2:  []
+P3:  49
+P5: Fortemente conexo
+
+Instance6.txt:
+
+Instance7.txt:
+
+Instance8.txt:
+P5: Fortemente conexo
+
+Instance9.txt:
+P5: Fortemente conexo
+
+Instance10.txt:
+
+
+/instances/big_graphs
+
+Instance11.txt:
+P1 = Ponte(s): 332 604
+P2:  [332, 604]
+P3:  794
+P5: Fortemente conexo
+
+Instance12.txt:
+P1 = Ponte(s): 1983 1571
+P1 = Ponte(s): 1985 290
+P1 = Ponte(s): 1999 329
+P1 = Ponte(s): 1999 380
+P1 = Ponte(s): 1999 599
+P1 = Ponte(s): 1999 1361
+P1 = Ponte(s): 1999 1368
+P1 = Ponte(s): 1999 1401
+P1 = Ponte(s): 1999 1501
+P1 = Ponte(s): 1999 1506
+P2:  [1985, 1983, 1999]
+P3:  1999
+P5: Fortemente conexo
+
+Instance13.txt:
+
+Instance14.txt:
+
+facebook_combined.txt:
+P1 = Ponte(s): 686 692
+P1 = Ponte(s): 686 801
+P1 = Ponte(s): 3437 3451
+P1 = Ponte(s): 3437 3453
+P1 = Ponte(s): 3437 3570
+P1 = Ponte(s): 3437 3650
+P1 = Ponte(s): 3437 3709
+P1 = Ponte(s): 3437 3729
+P1 = Ponte(s): 3437 3748
+P1 = Ponte(s): 3437 3798
+P1 = Ponte(s): 3437 3820
+P1 = Ponte(s): 3437 3853
+P1 = Ponte(s): 3437 3856
+P1 = Ponte(s): 3437 3935
+P1 = Ponte(s): 3437 3974
+P1 = Ponte(s): 1912 2079
+P1 = Ponte(s): 1912 2195
+P1 = Ponte(s): 1912 2269
+P1 = Ponte(s): 1912 2457
+P1 = Ponte(s): 1912 2470
+P1 = Ponte(s): 1912 2569
+P1 = Ponte(s): 1912 2596
+P1 = Ponte(s): 1684 2842
+P1 = Ponte(s): 1684 3031
+P1 = Ponte(s): 1684 3071
+P1 = Ponte(s): 1684 3183
+P1 = Ponte(s): 1684 3230
+P1 = Ponte(s): 698 875
+P1 = Ponte(s): 698 883
+P1 = Ponte(s): 698 891
+P1 = Ponte(s): 698 892
+P1 = Ponte(s): 3980 3984
+P1 = Ponte(s): 3980 4008
+P1 = Ponte(s): 3980 4010
+P1 = Ponte(s): 3980 4015
+P1 = Ponte(s): 3980 4022
+P1 = Ponte(s): 3980 4024
+P1 = Ponte(s): 3980 4035
+P1 = Ponte(s): 414 585
+P1 = Ponte(s): 414 602
+P1 = Ponte(s): 414 607
+P1 = Ponte(s): 414 608
+P1 = Ponte(s): 414 613
+P1 = Ponte(s): 414 624
+P1 = Ponte(s): 414 638
+P1 = Ponte(s): 414 668
+P1 = Ponte(s): 414 674
+P1 = Ponte(s): 107 911
+P1 = Ponte(s): 107 918
+P1 = Ponte(s): 107 1096
+P1 = Ponte(s): 107 1119
+P1 = Ponte(s): 107 1145
+P1 = Ponte(s): 107 1206
+P1 = Ponte(s): 107 1386
+P1 = Ponte(s): 107 1466
+P1 = Ponte(s): 107 1560
+P1 = Ponte(s): 107 1581
+P1 = Ponte(s): 107 1834
+P1 = Ponte(s): 348 358
+P1 = Ponte(s): 348 447
+P1 = Ponte(s): 348 550
+P1 = Ponte(s): 0 11
+P1 = Ponte(s): 0 12
+P1 = Ponte(s): 0 15
+P1 = Ponte(s): 0 18
+P1 = Ponte(s): 0 37
+P1 = Ponte(s): 0 43
+P1 = Ponte(s): 0 74
+P1 = Ponte(s): 0 114
+P1 = Ponte(s): 0 209
+P1 = Ponte(s): 0 210
+P1 = Ponte(s): 0 215
+P1 = Ponte(s): 0 287
+P1 = Ponte(s): 0 292
+P1 = Ponte(s): 0 335
+P2:  [107, 3980, 3437, 686, 1684, 1912, 698, 348, 414]
+P3:  4038
+P5: Fortemente conexo
+
+
+/instances/metro
+
+Athens.txt:
+P1 = Ponte(s): 3 4
+P1 = Ponte(s): 6 7
+P1 = Ponte(s): 6 8
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 1 5
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 3, 6]
+P3:  8
+P5: Fortemente conexo
+
+Barcelona.txt:
+P1 = Ponte(s): 7 8
+P1 = Ponte(s): 7 9
+P1 = Ponte(s): 18 19
+P1 = Ponte(s): 6 10
+P1 = Ponte(s): 5 28
+P1 = Ponte(s): 4 24
+P1 = Ponte(s): 26 25
+P1 = Ponte(s): 26 27
+P1 = Ponte(s): 4 26
+P1 = Ponte(s): 21 20
+P1 = Ponte(s): 22 21
+P1 = Ponte(s): 22 23
+P1 = Ponte(s): 0 1
+P2:  [1, 4, 5, 6, 7, 18, 21, 22, 26]
+P3:  28
+P5: Fortemente conexo
+
+Berlin -U-bahnonly.txt:
+P1 = Ponte(s): 6 7
+P1 = Ponte(s): 9 8
+P1 = Ponte(s): 12 13
+P1 = Ponte(s): 12 14
+P1 = Ponte(s): 18 21
+P1 = Ponte(s): 17 20
+P1 = Ponte(s): 15 19
+P1 = Ponte(s): 29 28
+P1 = Ponte(s): 30 31
+P1 = Ponte(s): 9 27
+P1 = Ponte(s): 22 23
+P1 = Ponte(s): 24 25
+P1 = Ponte(s): 24 26
+P1 = Ponte(s): 0 1
+P2:  [1, 6, 9, 12, 15, 17, 18, 22, 24, 29, 30]
+P3:  31
+P5: Fortemente conexo
+
+Boston.txt:
+P1 = Ponte(s): 3 4
+P1 = Ponte(s): 3 5
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 2 6
+P1 = Ponte(s): 9 10
+P1 = Ponte(s): 9 11
+P1 = Ponte(s): 8 9
+P1 = Ponte(s): 13 12
+P1 = Ponte(s): 7 14
+P1 = Ponte(s): 15 16
+P1 = Ponte(s): 17 18
+P1 = Ponte(s): 17 19
+P1 = Ponte(s): 17 20
+P1 = Ponte(s): 15 17
+P1 = Ponte(s): 1 15
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 3, 7, 8, 9, 13, 15, 17]
+P3:  20
+P5: Fortemente conexo
+
+Brussels.txt:
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 4 5
+P1 = Ponte(s): 4 6
+P1 = Ponte(s): 3 4
+P1 = Ponte(s): 3 8
+P1 = Ponte(s): 0 7
+P2:  [1, 3, 4, 7]
+P3:  8
+P5: Fortemente conexo
+
+Bucharest.txt:
+P1 = Ponte(s): 3 5
+P1 = Ponte(s): 2 10
+P1 = Ponte(s): 8 7
+P1 = Ponte(s): 1 9
+P1 = Ponte(s): 0 6
+P2:  [8, 1, 2, 3]
+P3:  10
+P5: Fortemente conexo
+
+Buenos Aires.txt:
+P1 = Ponte(s): 3 4
+P1 = Ponte(s): 3 5
+P1 = Ponte(s): 6 7
+P1 = Ponte(s): 2 8
+P1 = Ponte(s): 1 9
+P1 = Ponte(s): 1 10
+P1 = Ponte(s): 1 11
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 3, 6]
+P3:  11
+P5: Fortemente conexo
+
+Cairo.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 2 4
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 1 5
+P1 = Ponte(s): 0 1
+P2:  [1, 2]
+P3:  5
+P5: Fortemente conexo
+
+Chicago.txt:
+P1 = Ponte(s): 22 20
+P1 = Ponte(s): 22 23
+P1 = Ponte(s): 12 21
+P1 = Ponte(s): 15 16
+P1 = Ponte(s): 15 18
+P1 = Ponte(s): 10 15
+P1 = Ponte(s): 10 17
+P1 = Ponte(s): 10 19
+P1 = Ponte(s): 7 24
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 1 6
+P1 = Ponte(s): 4 1
+P1 = Ponte(s): 4 5
+P1 = Ponte(s): 0 4
+P2:  [1, 2, 4, 7, 10, 12, 15, 22]
+P3:  24
+P5: Fortemente conexo
+
+Delhi.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 2 4
+P1 = Ponte(s): 2 7
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 1 5
+P1 = Ponte(s): 1 6
+P1 = Ponte(s): 0 1
+P2:  [1, 2]
+P3:  7
+P5: Fortemente conexo
+
+Hong Kong.txt:
+P1 = Ponte(s): 2 1
+P1 = Ponte(s): 4 3
+P1 = Ponte(s): 6 5
+P1 = Ponte(s): 7 8
+P1 = Ponte(s): 10 9
+P1 = Ponte(s): 13 14
+P1 = Ponte(s): 15 16
+P1 = Ponte(s): 6 12
+P1 = Ponte(s): 2 4
+P1 = Ponte(s): 0 2
+P2:  [2, 4, 6, 7, 10, 12, 13, 15]
+P3:  16
+P5: Fortemente conexo
+
+Lisbon.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 2 4
+P1 = Ponte(s): 5 6
+P1 = Ponte(s): 7 8
+P1 = Ponte(s): 7 9
+P1 = Ponte(s): 1 10
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 5, 7]
+P3:  10
+P5: Fortemente conexo
+
+London.txt:
+P1 = Ponte(s): 4 3
+P1 = Ponte(s): 50 48
+P1 = Ponte(s): 50 49
+P1 = Ponte(s): 51 50
+P1 = Ponte(s): 20 21
+P1 = Ponte(s): 20 22
+P1 = Ponte(s): 30 26
+P1 = Ponte(s): 29 27
+P1 = Ponte(s): 29 28
+P1 = Ponte(s): 38 39
+P1 = Ponte(s): 42 43
+P1 = Ponte(s): 41 42
+P1 = Ponte(s): 46 47
+P1 = Ponte(s): 45 46
+P1 = Ponte(s): 44 45
+P1 = Ponte(s): 31 24
+P1 = Ponte(s): 31 25
+P1 = Ponte(s): 32 31
+P1 = Ponte(s): 67 68
+P1 = Ponte(s): 67 69
+P1 = Ponte(s): 66 67
+P1 = Ponte(s): 66 70
+P1 = Ponte(s): 65 66
+P1 = Ponte(s): 72 71
+P1 = Ponte(s): 5 6
+P1 = Ponte(s): 76 75
+P1 = Ponte(s): 77 79
+P1 = Ponte(s): 77 80
+P1 = Ponte(s): 76 77
+P1 = Ponte(s): 74 76
+P1 = Ponte(s): 61 73
+P1 = Ponte(s): 9 8
+P1 = Ponte(s): 9 10
+P1 = Ponte(s): 82 81
+P1 = Ponte(s): 0 1
+P2:  [1, 4, 5, 9, 20, 29, 30, 31, 32, 38, 41, 42, 44, 45, 46, 50, 51, 61, 65, 66, 67, 72, 74, 76, 77, 82]
+P3:  82
+P5: Fortemente conexo
+
+Lyon.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 5 6
+P1 = Ponte(s): 7 8
+P1 = Ponte(s): 2 9
+P1 = Ponte(s): 1 4
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 5, 7]
+P3:  9
+P5: Fortemente conexo
+
+Madrid.txt:
+P1 = Ponte(s): 12 11
+P1 = Ponte(s): 36 35
+P1 = Ponte(s): 40 41
+P1 = Ponte(s): 42 43
+P1 = Ponte(s): 42 44
+P1 = Ponte(s): 23 22
+P1 = Ponte(s): 27 28
+P1 = Ponte(s): 30 29
+P1 = Ponte(s): 33 34
+P1 = Ponte(s): 9 47
+P1 = Ponte(s): 8 21
+P1 = Ponte(s): 0 1
+P2:  [1, 36, 33, 8, 9, 42, 12, 40, 23, 27, 30]
+P3:  47
+P5: Fortemente conexo
+
+Marseille.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 2 4
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 1 5
+P1 = Ponte(s): 0 1
+P2:  [1, 2]
+P3:  5
+P5: Fortemente conexo
+
+Mexico City.txt:
+P1 = Ponte(s): 7 8
+P1 = Ponte(s): 14 15
+P1 = Ponte(s): 22 23
+P1 = Ponte(s): 25 24
+P1 = Ponte(s): 20 31
+P1 = Ponte(s): 27 28
+P1 = Ponte(s): 10 9
+P1 = Ponte(s): 19 18
+P1 = Ponte(s): 11 34
+P1 = Ponte(s): 1 17
+P1 = Ponte(s): 0 1
+P2:  [1, 7, 10, 11, 14, 19, 20, 22, 25, 27]
+P3:  34
+P5: Fortemente conexo
+
+Milan.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 5 4
+P1 = Ponte(s): 11 12
+P1 = Ponte(s): 11 13
+P1 = Ponte(s): 5 11
+P1 = Ponte(s): 6 7
+P1 = Ponte(s): 10 8
+P1 = Ponte(s): 10 9
+P1 = Ponte(s): 6 10
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 5, 6, 10, 11]
+P3:  13
+P5: Fortemente conexo
+
+Montreal.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 2 4
+P1 = Ponte(s): 5 8
+P1 = Ponte(s): 6 7
+P1 = Ponte(s): 6 9
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 5, 6]
+P3:  9
+P5: Fortemente conexo
+
+Moscow.txt:
+P1 = Ponte(s): 6 7
+P1 = Ponte(s): 9 8
+P1 = Ponte(s): 19 20
+P1 = Ponte(s): 22 21
+P1 = Ponte(s): 24 25
+P1 = Ponte(s): 12 13
+P1 = Ponte(s): 15 14
+P1 = Ponte(s): 15 16
+P1 = Ponte(s): 28 27
+P1 = Ponte(s): 26 28
+P1 = Ponte(s): 26 29
+P1 = Ponte(s): 30 31
+P1 = Ponte(s): 34 40
+P1 = Ponte(s): 33 36
+P1 = Ponte(s): 35 39
+P1 = Ponte(s): 37 38
+P1 = Ponte(s): 0 1
+P2:  [1, 34, 35, 37, 6, 33, 9, 12, 15, 19, 22, 24, 26, 28, 30]
+P3:  40
+P5: Fortemente conexo
+
+New York.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 9 5
+P1 = Ponte(s): 8 6
+P1 = Ponte(s): 8 7
+P1 = Ponte(s): 14 11
+P1 = Ponte(s): 13 4
+P1 = Ponte(s): 32 36
+P1 = Ponte(s): 33 34
+P1 = Ponte(s): 54 53
+P1 = Ponte(s): 55 56
+P1 = Ponte(s): 57 58
+P1 = Ponte(s): 59 60
+P1 = Ponte(s): 59 61
+P1 = Ponte(s): 57 59
+P1 = Ponte(s): 55 57
+P1 = Ponte(s): 54 55
+P1 = Ponte(s): 64 65
+P1 = Ponte(s): 74 75
+P1 = Ponte(s): 51 48
+P1 = Ponte(s): 52 62
+P1 = Ponte(s): 51 52
+P1 = Ponte(s): 42 51
+P1 = Ponte(s): 44 45
+P1 = Ponte(s): 68 70
+P1 = Ponte(s): 68 72
+P1 = Ponte(s): 9 16
+P1 = Ponte(s): 2 12
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 0 1
+P2:  [32, 1, 2, 64, 68, 33, 8, 9, 42, 12, 13, 14, 44, 51, 52, 54, 55, 57, 59, 74]
+P3:  76
+P5: Fortemente conexo
+
+Osaka.txt:
+P1 = Ponte(s): 8 7
+P1 = Ponte(s): 10 11
+P1 = Ponte(s): 22 20
+P1 = Ponte(s): 22 21
+P1 = Ponte(s): 27 28
+P1 = Ponte(s): 29 30
+P1 = Ponte(s): 31 32
+P1 = Ponte(s): 33 34
+P1 = Ponte(s): 33 35
+P1 = Ponte(s): 18 19
+P1 = Ponte(s): 1 12
+P1 = Ponte(s): 0 1
+P2:  [33, 1, 8, 10, 18, 22, 27, 29, 31]
+P3:  35
+P5: Fortemente conexo
+
+Paris.txt:
+P1 = Ponte(s): 11 12
+P1 = Ponte(s): 11 13
+P1 = Ponte(s): 15 14
+P1 = Ponte(s): 16 17
+P1 = Ponte(s): 29 31
+P1 = Ponte(s): 34 35
+P1 = Ponte(s): 34 36
+P1 = Ponte(s): 46 47
+P1 = Ponte(s): 46 48
+P1 = Ponte(s): 45 46
+P1 = Ponte(s): 44 49
+P1 = Ponte(s): 28 30
+P1 = Ponte(s): 75 73
+P1 = Ponte(s): 52 53
+P1 = Ponte(s): 52 54
+P1 = Ponte(s): 55 56
+P1 = Ponte(s): 76 61
+P1 = Ponte(s): 60 62
+P1 = Ponte(s): 64 63
+P1 = Ponte(s): 69 70
+P1 = Ponte(s): 69 71
+P1 = Ponte(s): 68 69
+P1 = Ponte(s): 74 72
+P1 = Ponte(s): 1 50
+P1 = Ponte(s): 0 1
+P2:  [64, 1, 34, 75, 68, 69, 60, 74, 11, 44, 45, 46, 15, 16, 76, 52, 55, 28, 29]
+P3:  77
+P5: Fortemente conexo
+
+Prague.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 2 4
+P1 = Ponte(s): 5 6
+P1 = Ponte(s): 5 7
+P1 = Ponte(s): 1 8
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 5]
+P3:  8
+P5: Fortemente conexo
+
+Rome.txt:
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 1 3
+P1 = Ponte(s): 1 4
+P1 = Ponte(s): 0 1
+P2:  [1]
+P3:  4
+P5: Fortemente conexo
+
+Seoul.txt:
+P1 = Ponte(s): 16 17
+P1 = Ponte(s): 16 18
+P1 = Ponte(s): 20 19
+P1 = Ponte(s): 22 21
+P1 = Ponte(s): 29 30
+P1 = Ponte(s): 31 32
+P1 = Ponte(s): 31 33
+P1 = Ponte(s): 52 53
+P1 = Ponte(s): 51 52
+P1 = Ponte(s): 56 54
+P1 = Ponte(s): 56 55
+P1 = Ponte(s): 58 56
+P1 = Ponte(s): 58 59
+P1 = Ponte(s): 65 66
+P1 = Ponte(s): 68 69
+P1 = Ponte(s): 13 60
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 1 67
+P1 = Ponte(s): 1 70
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 68, 65, 13, 16, 51, 20, 22, 56, 52, 58, 29, 31]
+P3:  70
+P5: Fortemente conexo
+
+Shanguai.txt:
+P1 = Ponte(s): 5 6
+P1 = Ponte(s): 4 5
+P1 = Ponte(s): 8 7
+P1 = Ponte(s): 10 9
+P1 = Ponte(s): 11 12
+P1 = Ponte(s): 18 19
+P1 = Ponte(s): 18 20
+P1 = Ponte(s): 11 21
+P1 = Ponte(s): 13 14
+P1 = Ponte(s): 16 15
+P1 = Ponte(s): 0 1
+P2:  [1, 4, 5, 8, 10, 11, 13, 16, 18]
+P3:  21
+P5: Fortemente conexo
+
+Singapore.txt:
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 5 4
+P1 = Ponte(s): 7 11
+P1 = Ponte(s): 8 9
+P1 = Ponte(s): 8 10
+P1 = Ponte(s): 6 8
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 5, 6, 7, 8]
+P3:  11
+P5: Fortemente conexo
+
+Stockholm.txt:
+P1 = Ponte(s): 2 1
+P1 = Ponte(s): 7 8
+P1 = Ponte(s): 7 9
+P1 = Ponte(s): 6 7
+P1 = Ponte(s): 6 10
+P1 = Ponte(s): 5 6
+P1 = Ponte(s): 13 11
+P1 = Ponte(s): 13 12
+P1 = Ponte(s): 5 13
+P1 = Ponte(s): 4 5
+P1 = Ponte(s): 3 4
+P1 = Ponte(s): 14 15
+P1 = Ponte(s): 16 17
+P1 = Ponte(s): 16 18
+P1 = Ponte(s): 14 16
+P1 = Ponte(s): 3 14
+P1 = Ponte(s): 3 19
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 0 2
+P2:  [2, 3, 4, 5, 6, 7, 13, 14, 16]
+P3:  19
+P5: Fortemente conexo
+
+St Peterburg.txt:
+P1 = Ponte(s): 3 4
+P1 = Ponte(s): 3 5
+P1 = Ponte(s): 7 8
+P1 = Ponte(s): 7 10
+P1 = Ponte(s): 6 9
+P1 = Ponte(s): 13 11
+P1 = Ponte(s): 13 12
+P1 = Ponte(s): 0 1
+P2:  [1, 3, 13, 6, 7]
+P3:  13
+P5: Fortemente conexo
+
+Tokyo.txt:
+P1 = Ponte(s): 15 16
+P1 = Ponte(s): 15 17
+P1 = Ponte(s): 15 19
+P1 = Ponte(s): 35 36
+P1 = Ponte(s): 57 55
+P1 = Ponte(s): 53 54
+P1 = Ponte(s): 43 44
+P1 = Ponte(s): 38 37
+P1 = Ponte(s): 21 20
+P1 = Ponte(s): 11 18
+P1 = Ponte(s): 10 22
+P1 = Ponte(s): 10 23
+P1 = Ponte(s): 4 56
+P1 = Ponte(s): 3 61
+P1 = Ponte(s): 0 1
+P2:  [1, 3, 4, 38, 10, 11, 15, 43, 35, 21, 57, 53]
+P3:  61
+P5: Fortemente conexo
+
+Toronto.txt:
+P1 = Ponte(s): 4 5
+P1 = Ponte(s): 3 4
+P1 = Ponte(s): 8 7
+P1 = Ponte(s): 8 9
+P1 = Ponte(s): 3 8
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 1 2
+P1 = Ponte(s): 1 6
+P1 = Ponte(s): 0 1
+P2:  [8, 1, 2, 3, 4]
+P3:  9
+P5: Fortemente conexo
+
+WashingtonDC.txt:
+P1 = Ponte(s): 3 4
+P1 = Ponte(s): 3 5
+P1 = Ponte(s): 2 3
+P1 = Ponte(s): 6 7
+P1 = Ponte(s): 9 8
+P1 = Ponte(s): 9 10
+P1 = Ponte(s): 6 9
+P1 = Ponte(s): 11 12
+P1 = Ponte(s): 14 15
+P1 = Ponte(s): 14 16
+P1 = Ponte(s): 13 14
+P1 = Ponte(s): 0 1
+P2:  [1, 2, 3, 6, 9, 11, 13, 14]
+P3:  16
+P5: Fortemente conexo
