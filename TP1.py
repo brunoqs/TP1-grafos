@@ -81,10 +81,10 @@ class grafo:
 	#funcao busca em profundidade
 	def DFS(self,v,grafo,flag = []):
 		if flag == []:
-		    visitados = []
-		    visited = [False]*len(grafo)  # Cria uma lista com o numero total de vertices, todos os valores igual a False
-		    visitados = self.visitado_lista(v,visited,grafo,visitados)
-		    return visitados
+			visitados = []
+			visited = [False]*len(grafo)  # Cria uma lista com o numero total de vertices, todos os valores igual a False
+			visitados = self.visitado_lista(v,visited,grafo,visitados)
+			return visitados
 		else:
 			visitados = []
 			visited = [False]*len(grafo)
@@ -102,50 +102,6 @@ class grafo:
 				self.visitado_lista(i, visited,grafo,visitados)
 		return visitados                       
 
-    #Funcao recebe uma grafo como lista   
-	def verifica_fortemente_conexo(self,grafo):
-		caminho = []
-		ma = self.DFS(0, grafo) #Faz a busca em profundidade e retorna uma lista 
-		#print ma
-		grafo_transp = self.grafo_transposto(self.ma) #calcula a matriz transposta do grafo/ MAS RETORNA O GRAFO COMO LISTA DE ADJ
-		mb = self.DFS(0,grafo_transp) #faz a busca em profundidade no grafo como lista
-		#print mb
-		ma.sort() #Ordena a lista
-		mb.sort()
-		if ma != mb:
-			return False
-		else:
-			return True
-
-	def grafo_transposto(self,grafo):
-		matriz = [0]*len(grafo)
-		for i in range(len(grafo)):      
-			matriz[i] = [0]*len(grafo)
-		for i,val in enumerate(grafo):
-			for j, valor in enumerate(val):
-				matriz[i][j] = grafo[j][i]
-                
-		la={} #criando dicionario
-		la1=[] #criando lista
-		for pos_linha in range(len(matriz)):
-			la1.append([]) # cria uma lista dentro da la1  
-			for pos_coluna in range(len(matriz[0])):
-				if matriz[pos_linha][pos_coluna] == 1: 
-					la1[pos_linha].append(pos_coluna) # adiciona os vertices que fazem ligacao com 1 vertice
-				else:
-					la1[pos_linha]
-			la[pos_linha] = la1[pos_linha] #adiciona as listas referente a cada vertice no dicionario
-		return la
-
-	def desconexo(self):
-		for linha in self.ma:
-			if linha.count(0) == self.qt_vertice: #se uma linha da matriz for 0, entao o grafo e desconexo
-				conexao = True
-				return conexao
-			else:
-				conexao = False
-		return conexao
-
 	#Se for conexo, qual aresta que se retirada o torna desconexo? Existe apenas uma oumais arestas com essa peculiaridade?
 	def P1(self,grafo,V):
 		a = []
@@ -158,7 +114,7 @@ class grafo:
 			if visitado[i] == False:# se o vertice nao foi visitado chama a funcao de busca de ponte
 				res =  self.ponte_busca(i,visitado,low,disc,grafo,time,parentes,a)
 		if res == []:#se o retorno for igual a False o grafo nao tem pontes
-			print "O grafo nao possui pontes"
+			print "P1: O grafo nao possui pontes"
 		return res
 
 	def ponte_busca(self,u,visitado,low,disc,grafo,time,parentes,a,total_pontes = []):
@@ -173,7 +129,7 @@ class grafo:
 				self.ponte_busca(v,visitado,low,disc,grafo,time,parentes,a,total_pontes) #BFS 
 				low[u] = min(low[u], low[v])
 				if low[v] > disc[u]:	
-					print 'Ponte(s):', u,v
+					print 'P1 = Ponte(s):', u,v
 					a.append('Inf')
 					total_pontes.append(u)
 					total_pontes.append(v)
@@ -219,9 +175,9 @@ class grafo:
 	#O grafo e desconexo, (fracamente) conexo, semi-fortemente conexo ou fortemente conexo?
 	def P5(self):
 		if self.verifica_fortemente_conexo(self.maTOla()) == True:
-			print "Fortemente conexo"
-		elif self.desconexo() == True:
-			print "Desconexo"
+			print "P5: Fortemente conexo"
+		elif self.desconexo() == True and self.d == "UNDIRECTED":
+			print "P5: Desconexo"
 
 	#Funcao recebe uma grafo como lista   
 	def verifica_fortemente_conexo(self,grafo):
@@ -267,9 +223,6 @@ class grafo:
 				conexao = False
 		return conexao
 
-	#http://www.geeksforgeeks.org/strongly-connected-components/
-	#def P6():
-
 # https://stackoverflow.com/questions/15646307/algorithm-for-diameter-of-graph ideia para implementar o diametro
 
 #http://ctr.wikia.com/wiki/Find_the_graph_diameter diametro
@@ -285,15 +238,12 @@ if __name__ == "__main__":
 	la1 = g.maTOla()
 	la3 = g.P1(la1,0)
 	la2 = g.maTOla()
-	print g.P2(la2,la3)
-	print g.P3(0)
+	print "P2: ", g.P2(la2,la3)
+	print "P3: ", g.P3(0)
 	#la = g.maTOla()
 	#diameter = g.P4(la)
 	#print(diameter)
 	g.P5()
-	
-
-
 
 #aparentemente o main do jeito que o mayron viado vai querer
 #	if sys.argv[2] == "-p1":
