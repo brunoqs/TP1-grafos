@@ -49,14 +49,73 @@ maTOmi():
 				aresta++
 	return mi // retorna matriz de incidencia
 
-DFS():
+DFS(v,grafo,flag = []):
+   //v é o vértice de inicio da busca
 
-visitado_lista():
+   // grafo como lista de adj
 
-verifica_fortemente_conexo():
+   //flag = valor para sinalizar o tipo de busca que sera feita na DFS, caso a flag esteja vazia executa uma DFS normal, caso contrario executa a DFS para a P2
 
-grafo_transposto():
+   if flag = dicionario vazio:
+       visitados = dicionario vazio
+       visited = [False]*len(grafos) 
+       visitados =visitado_lista(v,visited,grafo,visitados)
+       retorna visitados
 
+   else:
+        visitados = []
+	    visited = [False]*len(grafo)
+		for a,valor in enumerate(grafo):
+			if a == flag: //a é o vertice candidato a gerar desconexão
+
+				visited[a]=True //marca na lista da DFS que o vertice já foi explorado, assim a busca não ira passar por esse vértice
+
+		         visitados = self.visitado_lista(v,visited,grafo,visitados)
+   retorna visitados 
+
+
+visitado_lista(i, visited,grafo,visitados):
+        visited[v] = True  //Marca o vertice como visitado
+		visitados.append(v) 
+		for i in grafo[v]:
+			if visited[i] == False:          
+				self.visitado_lista(i, visited,grafo,visitados)
+		return visitados                       
+
+
+verifica_fortemente_conexo(grafo):
+    caminho = dicionario vazio
+    ma = lista de todos os vértices
+    grafo_transp(ma) calcula a matriz transposta do grafo
+    e retorna uma lista
+    ma.sort ordena
+    mb.sort ordena
+    if ma!=mb desconexo
+    else conexo
+
+
+grafo_transposto(grafo):
+    matriz auxiliar
+    cria a matriz
+    for i,val in enumerate(grafo):
+			for j, valor in enumerate(val):
+				matriz[i][j] = grafo[j][i]
+	//transposta da matriz
+	//troca a linha com a 
+    
+    //Cria uma lista de adj a partir da matriz
+	la={} #criando dicionario
+		la1=[] #criando lista
+		for pos_linha in range(len(matriz)):
+			la1.append([]) # cria uma lista dentro da la1  
+			for pos_coluna in range(len(matriz[0])):
+				if matriz[pos_linha][pos_coluna] == 1: 
+					la1[pos_linha].append(pos_coluna) # adiciona os vertices que fazem ligacao com 1 vertice
+				else:
+					la1[pos_linha]
+			la[pos_linha] = la1[pos_linha] #adiciona as listas referente a cada vertice no dicionario
+		return la
+		
 #verifica se o grafo e desconexo
 desconexo():
 	for each linha in matriz:
@@ -66,13 +125,67 @@ desconexo():
 			grafo nao e desconexo
 	return conexo
 
-P1():
+P1(grafo,V):
+        a = []
+		parentes = g.DFS(V,grafo) //Lista com todos os vértices
 
-ponte_busca():
+		tempo = 0 //Inicia o tempo com zero
 
-P2():
+		visitado = [False] * (len(grafo)) //lista com False com a mesma quantidade de vertices
 
+		prox = [float("Inf")] * (len(grafo)) //lisca com tempo-Inf /lista com a mesma quantidade de vertices
+
+		ant = [float("Inf")] * (len(grafo)) //lista com tempo-Inf / lista com a mesma quantidade de vertices
+
+		for i in range(len(grafo[V])): 
+		   if visitado[i] == False:
+				res =  self.ponte_busca(i,visitado,ant,prox,grafo,tempo,parentes,a)
+		if res == []: 
+			print "P1: O grafo nao possui pontes"
+		return res
+
+ponte_busca(u,visitado,ant,prox,grafo,tempo,parentes,a,total_pontes = []):
+   u = vertice pesquisado no momento
+   visitado = True //Marca o vértice como visitado 
+   prox[u] = tempo //Marca o tempo no vertice pesquisado
+   ant[u] = tempo //Marca o tempo no vértice pesquisado 
+   tempo // Incrementa o tempo
+   for v in grafo[u]:
+     //percore o grafo até o vertice pesquisado
+     if visitado no indice v for False
+        parentes [v] = //parentes no indice v recebe o vertice pesquisado u
+
+        ponte_busca(v,visitado,ant,prox,grafo,tempo,parentes,a,total_pontes)
+        //Recursão para percorrer todos os outro possiveis vértices alcansaveis
+
+        if ant[u] = recebe o valor minimo de (ant[u],ant[v])
+
+        if ant[v] > prox[u]:	
+					print 'P1 = Ponte(s):', u,v //Pontes
+					a.append('Inf') Marca como INF
+					total_pontes.append(u)#Pra ser usado na P2 
+					total_pontes.append(v)#Pra ser usado na P2
+			elif v != parentes[u]:
+				ant[u] = min(ant[u], prox[v])
+		return list(set(total_pontes))
+
+P2(self, grafo,total_pontes):
 #Partindo de um vertice qualquer, quantos outros vertices podemos alcancar no grafo?
+
+        vertices_removidos = [] //resposta final
+
+		for chave in total_pontes: //Recebe uma lista com as pontes do grafo
+
+			val = g.DFS(min(total_pontes),grafo,chave)
+
+			//Compara se a DFS ignorando o vértice candidato a gerar desconexão no grafo é menor que a quantidade de vértices do grafo "original" - 1
+
+			if len(val) < len(grafo) - 1:
+				vertices_removidos.append(chave) 
+
+			// monta uma lista com todos os vértices que geram desconexão       
+		return list(set(vertices_removidos))
+
 P3(vertice_qualquer):
 	return tamanho do caminho partindo de um vertice_qualquer -1
 
@@ -87,75 +200,77 @@ P5():
 
 TEMPO DE EXECUÇAO TOTAL (P1,P2,P3,P5) REFERENTE A CADA ARQUIVO 
 
-/instances/artificial
-Instance1.txt
-Instance2.txt
-Instance3.txt
-Instance4.txt
-Instance5.txt
-Instance6.txt
-Instance7.txt
-Instance8.txt
-Instance9.txt
-Instance10.txt
+**/instances/artificial
+Instance1.txt -> 0.067s	
+Instance2.txt -> 0.098s
+Instance3.txt -> 0.116s
+Instance4.txt -> 0.095s
+Instance5.txt -> 0.118s
+Instance6.txt -> 0.097s
+Instance7.txt -> 0.069s
+Instance8.txt -> 0.079s
+Instance9.txt -> 0.095s
+Instance10.txt -> 0.117s
 
-/instances/big_graphs
-Instance11.txt
-Instance12.txt
-Instance13.txt
-Instance14.txt
-facebook_combined.txt
+**/instances/big_graphs
+Instance11.txt -> 1.292s
+Instance12.txt -> 9.582s
+Instance13.txt -> 1.342s
+Instance14.txt -> 2.084s
+facebook_combined.txt -> 16.682s
 
-/instances/metro
-Athens.txt
-Barcelona.txt
-Berlin - U-bahn only.txt
-Boston.txt
-Brussels.txt
-Bucharest.txt
-Buenos Aires.txt
-Cairo.txt
-Chicago.txt
-Delhi.txt
-Hong Kong.txt
-Lisbon.txt
-London.txt
-Lyon.txt
-Madrid.txt
-Marseille.txt
-Mexico City.txt
-Milan.txt
-Montreal.txt
-Moscow.txt
-New York.txt
-Osaka.txt
-Paris.txt
-Prague.txt
-Rome.txt
-Seoul.txt
-Shanghai.txt
-Singapore.txt
-Stockholm.txt
-St Peterburg.txt
-Tokyo.txt
-Toronto.txt
-Washington DC.txt
+**/instances/metro
+Athens.txt -> 0.095s
+Barcelona.txt -> 0.113s
+Berlin - U-bahn only.txt -> 0.096s
+Boston.txt -> 0.099s
+Brussels.txt -> 0.089s
+Bucharest.txt -> 0.102s
+Buenos Aires.txt -> 0.088s
+Cairo.txt -> 0.092s
+Chicago.txt -> 0.097s
+Delhi.txt-> 0.133s
+Hong Kong.txt -> 0.071s
+Lisbon.txt -> 0.086s
+London.txt -> 0.298s
+Lyon.txt -> 0.096s
+Madrid.txt -> 0.127s
+Marseille.txt -> 0.095s
+Mexico City.txt -> 0.109s
+Milan.txt -> 0.091s
+Montreal.txt -> 0.095s
+Moscow.txt -> 0.134s
+New York.txt -> 0.259s
+Osaka.txt -> 0.122s
+Paris.txt ->0.236s
+Prague.txt -> 0.060s
+Rome.txt -> 0.087s
+Seoul.txt -> 0.224s
+Shanghai.txt -> 0.088s
+Singapore.txt -> 0.098s
+Stockholm.txt -> 0.101s
+St Peterburg.txt -> 0.092s
+Tokyo.txt -> 0.181s
+Toronto.txt -> 0.092s
+Washington DC.txt -> 0.097s
 
 
 RESULTADO REFERENTE A CADA ARQUIVO 
 
-/instances/artificial
+**/instances/artificial
 
 Instance1.txt :
 P1: O grafo nao possui pontes
 P2: []
 P3: 9
-P4: Fortemente conexo
+P4: 2
+P5: Fortemente conexo
 
 Instance2.txt:
 P1 = Ponte(s): 14 5
 P2:  [14]
 P3:  18
+P4:  4
 P5: Fortemente conexo
 
 Instance3.txt:
@@ -163,39 +278,52 @@ P1 = Ponte(s): 22 10
 P1 = Ponte(s): 24 20
 P2:  [24, 22]
 P3:  29
+P4:  3
 P5: Fortemente conexo
 
 Instance4.txt:
 P1: O grafo nao possui pontes
 P2:  []
 P3:  39
+P4:  4
 P5: Fortemente conexo
 
 Instance5.txt:
 P1: O grafo nao possui pontes
 P2:  []
 P3:  49
+P4:  5
 P5: Fortemente conexo
 
 Instance6.txt:
+P3:  8
+P4:  3
 
 Instance7.txt:
+P3:  18
+P4:  3
 
 Instance8.txt:
+P3:  29
+P4:  3
 P5: Fortemente conexo
 
 Instance9.txt:
+P3:  39
+P4:  4
 P5: Fortemente conexo
 
 Instance10.txt:
+P3:  49
+P4:  5
 
-
-/instances/big_graphs
+**/instances/big_graphs
 
 Instance11.txt:
 P1 = Ponte(s): 332 604
 P2:  [332, 604]
 P3:  794
+P4: BUG
 P5: Fortemente conexo
 
 Instance12.txt:
@@ -211,11 +339,16 @@ P1 = Ponte(s): 1999 1501
 P1 = Ponte(s): 1999 1506
 P2:  [1985, 1983, 1999]
 P3:  1999
+P4: BUG
 P5: Fortemente conexo
 
 Instance13.txt:
+P3:  798
+P4: BUG
 
 Instance14.txt:
+P3:  998
+P4: BUG
 
 facebook_combined.txt:
 P1 = Ponte(s): 686 692
@@ -295,10 +428,11 @@ P1 = Ponte(s): 0 292
 P1 = Ponte(s): 0 335
 P2:  [107, 3980, 3437, 686, 1684, 1912, 698, 348, 414]
 P3:  4038
+P4: BUG
 P5: Fortemente conexo
 
 
-/instances/metro
+**/instances/metro
 
 Athens.txt:
 P1 = Ponte(s): 3 4
@@ -309,6 +443,7 @@ P1 = Ponte(s): 1 5
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 3, 6]
 P3:  8
+P4:  4
 P5: Fortemente conexo
 
 Barcelona.txt:
@@ -327,6 +462,7 @@ P1 = Ponte(s): 22 23
 P1 = Ponte(s): 0 1
 P2:  [1, 4, 5, 6, 7, 18, 21, 22, 26]
 P3:  28
+P4:  8
 P5: Fortemente conexo
 
 Berlin -U-bahnonly.txt:
@@ -346,6 +482,7 @@ P1 = Ponte(s): 24 26
 P1 = Ponte(s): 0 1
 P2:  [1, 6, 9, 12, 15, 17, 18, 22, 24, 29, 30]
 P3:  31
+P4:  9
 P5: Fortemente conexo
 
 Boston.txt:
@@ -367,6 +504,7 @@ P1 = Ponte(s): 1 15
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 3, 7, 8, 9, 13, 15, 17]
 P3:  20
+P4:  7
 P5: Fortemente conexo
 
 Brussels.txt:
@@ -378,6 +516,7 @@ P1 = Ponte(s): 3 8
 P1 = Ponte(s): 0 7
 P2:  [1, 3, 4, 7]
 P3:  8
+P4:  4
 P5: Fortemente conexo
 
 Bucharest.txt:
@@ -388,6 +527,7 @@ P1 = Ponte(s): 1 9
 P1 = Ponte(s): 0 6
 P2:  [8, 1, 2, 3]
 P3:  10
+P4:  5
 P5: Fortemente conexo
 
 Buenos Aires.txt:
@@ -401,6 +541,7 @@ P1 = Ponte(s): 1 11
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 3, 6]
 P3:  11
+P4:  4
 P5: Fortemente conexo
 
 Cairo.txt:
@@ -411,6 +552,7 @@ P1 = Ponte(s): 1 5
 P1 = Ponte(s): 0 1
 P2:  [1, 2]
 P3:  5
+P4:  3
 P5: Fortemente conexo
 
 Chicago.txt:
@@ -430,6 +572,7 @@ P1 = Ponte(s): 4 5
 P1 = Ponte(s): 0 4
 P2:  [1, 2, 4, 7, 10, 12, 15, 22]
 P3:  24
+P4:  10
 P5: Fortemente conexo
 
 Delhi.txt:
@@ -442,6 +585,7 @@ P1 = Ponte(s): 1 6
 P1 = Ponte(s): 0 1
 P2:  [1, 2]
 P3:  7
+P4:  3
 P5: Fortemente conexo
 
 Hong Kong.txt:
@@ -457,6 +601,7 @@ P1 = Ponte(s): 2 4
 P1 = Ponte(s): 0 2
 P2:  [2, 4, 6, 7, 10, 12, 13, 15]
 P3:  16
+P4:  8
 P5: Fortemente conexo
 
 Lisbon.txt:
@@ -469,6 +614,7 @@ P1 = Ponte(s): 1 10
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 5, 7]
 P3:  10
+P4:  4
 P5: Fortemente conexo
 
 London.txt:
@@ -509,6 +655,7 @@ P1 = Ponte(s): 82 81
 P1 = Ponte(s): 0 1
 P2:  [1, 4, 5, 9, 20, 29, 30, 31, 32, 38, 41, 42, 44, 45, 46, 50, 51, 61, 65, 66, 67, 72, 74, 76, 77, 82]
 P3:  82
+P4:  15
 P5: Fortemente conexo
 
 Lyon.txt:
@@ -520,6 +667,7 @@ P1 = Ponte(s): 1 4
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 5, 7]
 P3:  9
+P4:  4
 P5: Fortemente conexo
 
 Madrid.txt:
@@ -537,6 +685,7 @@ P1 = Ponte(s): 8 21
 P1 = Ponte(s): 0 1
 P2:  [1, 36, 33, 8, 9, 42, 12, 40, 23, 27, 30]
 P3:  47
+P4:  11
 P5: Fortemente conexo
 
 Marseille.txt:
@@ -547,6 +696,7 @@ P1 = Ponte(s): 1 5
 P1 = Ponte(s): 0 1
 P2:  [1, 2]
 P3:  5
+P4:  3
 P5: Fortemente conexo
 
 Mexico City.txt:
@@ -563,6 +713,7 @@ P1 = Ponte(s): 1 17
 P1 = Ponte(s): 0 1
 P2:  [1, 7, 10, 11, 14, 19, 20, 22, 25, 27]
 P3:  34
+P4:  10
 P5: Fortemente conexo
 
 Milan.txt:
@@ -578,6 +729,7 @@ P1 = Ponte(s): 6 10
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 5, 6, 10, 11]
 P3:  13
+P4:  6
 P5: Fortemente conexo
 
 Montreal.txt:
@@ -589,6 +741,7 @@ P1 = Ponte(s): 6 9
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 5, 6]
 P3:  9
+P4:  4
 P5: Fortemente conexo
 
 Moscow.txt:
@@ -611,6 +764,7 @@ P1 = Ponte(s): 37 38
 P1 = Ponte(s): 0 1
 P2:  [1, 34, 35, 37, 6, 33, 9, 12, 15, 19, 22, 24, 26, 28, 30]
 P3:  40
+P4:  8
 P5: Fortemente conexo
 
 New York.txt:
@@ -645,6 +799,7 @@ P1 = Ponte(s): 1 2
 P1 = Ponte(s): 0 1
 P2:  [32, 1, 2, 64, 68, 33, 8, 9, 42, 12, 13, 14, 44, 51, 52, 54, 55, 57, 59, 74]
 P3:  76
+P4:  16
 P5: Fortemente conexo
 
 Osaka.txt:
@@ -662,6 +817,7 @@ P1 = Ponte(s): 1 12
 P1 = Ponte(s): 0 1
 P2:  [33, 1, 8, 10, 18, 22, 27, 29, 31]
 P3:  35
+P4:  8
 P5: Fortemente conexo
 
 Paris.txt:
@@ -692,6 +848,7 @@ P1 = Ponte(s): 1 50
 P1 = Ponte(s): 0 1
 P2:  [64, 1, 34, 75, 68, 69, 60, 74, 11, 44, 45, 46, 15, 16, 76, 52, 55, 28, 29]
 P3:  77
+P4:  14
 P5: Fortemente conexo
 
 Prague.txt:
@@ -703,6 +860,7 @@ P1 = Ponte(s): 1 8
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 5]
 P3:  8
+P4:  3
 P5: Fortemente conexo
 
 Rome.txt:
@@ -712,6 +870,7 @@ P1 = Ponte(s): 1 4
 P1 = Ponte(s): 0 1
 P2:  [1]
 P3:  4
+P4:  2
 P5: Fortemente conexo
 
 Seoul.txt:
@@ -737,6 +896,7 @@ P1 = Ponte(s): 1 70
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 68, 65, 13, 16, 51, 20, 22, 56, 52, 58, 29, 31]
 P3:  70
+P4:  18
 P5: Fortemente conexo
 
 Shanguai.txt:
@@ -753,6 +913,7 @@ P1 = Ponte(s): 16 15
 P1 = Ponte(s): 0 1
 P2:  [1, 4, 5, 8, 10, 11, 13, 16, 18]
 P3:  21
+P4:  7
 P5: Fortemente conexo
 
 Singapore.txt:
@@ -765,6 +926,7 @@ P1 = Ponte(s): 6 8
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 5, 6, 7, 8]
 P3:  11
+P4:  5
 P5: Fortemente conexo
 
 Stockholm.txt:
@@ -789,6 +951,7 @@ P1 = Ponte(s): 2 3
 P1 = Ponte(s): 0 2
 P2:  [2, 3, 4, 5, 6, 7, 13, 14, 16]
 P3:  19
+P4:  8
 P5: Fortemente conexo
 
 St Peterburg.txt:
@@ -802,6 +965,7 @@ P1 = Ponte(s): 13 12
 P1 = Ponte(s): 0 1
 P2:  [1, 3, 13, 6, 7]
 P3:  13
+P4:  4
 P5: Fortemente conexo
 
 Tokyo.txt:
@@ -822,6 +986,7 @@ P1 = Ponte(s): 3 61
 P1 = Ponte(s): 0 1
 P2:  [1, 3, 4, 38, 10, 11, 15, 43, 35, 21, 57, 53]
 P3:  61
+P4:  15
 P5: Fortemente conexo
 
 Toronto.txt:
@@ -836,6 +1001,7 @@ P1 = Ponte(s): 1 6
 P1 = Ponte(s): 0 1
 P2:  [8, 1, 2, 3, 4]
 P3:  9
+P4:  5
 P5: Fortemente conexo
 
 WashingtonDC.txt:
@@ -853,4 +1019,5 @@ P1 = Ponte(s): 13 14
 P1 = Ponte(s): 0 1
 P2:  [1, 2, 3, 6, 9, 11, 13, 14]
 P3:  16
+P4:  6
 P5: Fortemente conexo

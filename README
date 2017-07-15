@@ -1,7 +1,9 @@
-Trabalho de grafos utilizando python2.7.
+Trabalho de grafos utilizando python2.7
 
-OBS: Utilizamos uma biblioteca chamada numpy para printar a matriz organizada e para utilizarmos a função que pega a matriz triangular superior.
-OBS1: Utilizamos um recurso do python para aumentar a pilha de recursao para 10000, pois o limite da pilha de recursao e 1000 e devido ao tamanho de alguns grafos bugava a funçao.
-OBS2: Nossa estrutra de dados nativa e a matriz de adjacencia.
+OBS: Utilizamos uma biblioteca chamada numpy para printar a matriz organizada e para utilizarmos a função que pega a matriz triângular superior.
+
+OBS1: Utilizamos um recurso do python para aumentar a pilha de recursão para 10000, pois o limite da pilha de recursao é 1000 e devido ao tamanho de alguns grafos bugava a função.
+
+OBS2: Nossa estrutra de dados nativa é a matriz de adjacência.
 
 

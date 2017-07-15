@@ -106,40 +106,38 @@ class grafo:
 	def P1(self,grafo,V):
 		a = []
 		parentes = g.DFS(V,grafo)
-		time = 0 #Inicia o tempo com zero
+		tempo = 0 #Inicia o tempo com zero
 		visitado = [False] * (len(grafo)) #lista com False/ lista com a mesma quantidade de vertices
-		disc = [float("Inf")] * (len(grafo)) #lisca com tempo-Inf /lista com a mesma quantidade de vertices
-		low = [float("Inf")] * (len(grafo)) #lista com tempo-Inf / lista com a mesma quantidade de vertices
+		prox = [float("Inf")] * (len(grafo)) #lisca com tempo-Inf /lista com a mesma quantidade de vertices
+		ant = [float("Inf")] * (len(grafo)) #lista com tempo-Inf / lista com a mesma quantidade de vertices
 		for i in range(len(grafo[V])):# for ate o numero de vertices
 			if visitado[i] == False:# se o vertice nao foi visitado chama a funcao de busca de ponte
-				res =  self.ponte_busca(i,visitado,low,disc,grafo,time,parentes,a)
-		if res == []:#se o retorno for igual a False o grafo nao tem pontes
-			print "P1: O grafo nao possui pontes"
+				res =  self.ponte_busca(i,visitado,ant,prox,grafo,tempo,parentes,a)
 		return res
 
-	def ponte_busca(self,u,visitado,low,disc,grafo,time,parentes,a,total_pontes = []):
+	def ponte_busca(self,u,visitado,ant,prox,grafo,tempo,parentes,a,total_pontes = []):
 		visitado[u] = True #vertice de inicio marcado como visitado
-		disc[u] = time #vertice acima marcado com tempo 0
-		low[u] = time #vertice abaixo marcado com tempo 0
-		time += 1 # imcremento no tempo
+		prox[u] = tempo #vertice acima marcado com tempo 0
+		ant[u] = tempo #vertice abaixo marcado com tempo 0
+		tempo += 1 # imcremento no tempo
 		for v in grafo[u]: # executa ate o vertice de busca
 			if visitado[v] == False:
 				parentes[v] = u
-				parentes.append([])#Ganbiara kkkkkk 
-				self.ponte_busca(v,visitado,low,disc,grafo,time,parentes,a,total_pontes) #BFS 
-				low[u] = min(low[u], low[v])
-				if low[v] > disc[u]:	
+				parentes.append([])
+				self.ponte_busca(v,visitado,ant,prox,grafo,tempo,parentes,a,total_pontes)  
+				ant[u] = min(ant[u], ant[v])
+				if ant[v] > prox[u]:	
 					print 'P1 = Ponte(s):', u,v
 					a.append('Inf')
-					total_pontes.append(u)
+					total_pontes.append(u)#Pra ser usado na P2 
 					total_pontes.append(v)
-					
 			elif v != parentes[u]:
-				low[u] = min(low[u], disc[v])
+				ant[u] = min(ant[u], prox[v])
 		return list(set(total_pontes))
 
 	#Existe um unico vertice que, se retirado, causaria uma desconexao no grafo?
 	def P2(self, grafo,total_pontes):
+		#Os vertices cadidatos a gerarem desconexao no grafo, sao os vertices que possuem arestas de ponte
 		vertices_removidos = []
 		for chave in total_pontes:
 			val = g.DFS(min(total_pontes),grafo,chave)
@@ -156,7 +154,7 @@ class grafo:
 		d = self.floyd_warshall(grafo)
 		print "P4: ",d
 	
-	def Matriz_floydwarshall(self,grafo):
+	def matriz_floydwarshall(self,grafo):
 		INF = 99999999
 		matriz = [0]*len(grafo)
 		for i in range(len(grafo)):      
@@ -171,7 +169,7 @@ class grafo:
 
             
 	def floyd_warshall(self,grafo):
-		caminho = self.Matriz_floydwarshall(grafo)
+		caminho = self.matriz_floydwarshall(grafo)
 		size = len(caminho)
 		d = 0
 		for k in range(size):
@@ -195,10 +193,8 @@ class grafo:
 	def verifica_fortemente_conexo(self,grafo):
 		caminho = []
 		ma = self.DFS(0, grafo) #Faz a busca em profundidade e retorna uma lista 
-		#print ma
 		grafo_transp = self.grafo_transposto(self.ma) #calcula a matriz transposta do grafo/ MAS RETORNA O GRAFO COMO LISTA DE ADJ
 		mb = self.DFS(0,grafo_transp) #faz a busca em profundidade no grafo como lista
-		#print mb
 		ma.sort() #Ordena a lista
 		mb.sort()
 		if ma != mb:
@@ -235,46 +231,49 @@ class grafo:
 				conexao = False
 		return conexao
 
-# https://stackoverflow.com/questions/15646307/algorithm-for-diameter-of-graph ideia para implementar o diametro
-
-#http://ctr.wikia.com/wiki/Find_the_graph_diameter diametro
-#http://www.inf.ufsc.br/grafos/definicoes/definicao.html conceitos grafos
-#http://www3.ifrn.edu.br/~jurandy/fdp/doc/aprenda-python/index.html doc python br
-#main
 if __name__ == "__main__":
+
 	g = grafo()
 	g.lerArquivo()
 	#print np.matrix(g.ma)
 	#print g.maTOla()
 	#print np.matrix(g.maTOmi())
-	la1 = g.maTOla()
-	la3 = g.P1(la1,0)
-	la2 = g.maTOla()
-	print "P2: ", g.P2(la2,la3)
-	print "P3: ", g.P3(0)
-	g.P4(g.ma)
-	g.P5()
+	#la1 = g.maTOla()
+	#la3 = g.P1(la1,0)
+	#la2 = g.maTOla()
+	#print "P2: ", g.P2(la2,la3)
+	#print "P3: ", g.P3(0)
+	#g.P4(g.ma)
+	#g.P5()
 
-#aparentemente o main do jeito que o mayron viado vai querer
-#	if sys.argv[2] == "-p1":
-#		if g.d[0] == "UNDIRECTED":
-#			la = g.maTOla()
-#			g.P1(la, 0)
-#	if sys.argv[3] == "-p2":
-#		if g.d[0] == "UNDIRECTED":
-#			la1 = g.maTOla()
-#			print g.P2(la1)
-#
-#	if sys.argv[4] == "-p3" and sys.argv[5] != "-p4" or sys.argv[6] != "-p5":
-#		if sys.argv[5] != "-p4":
-#			print g.P3(int(sys.argv[5]))
-#		if sys.argv[6] != "-p5":
-#			print g.P3(int(sys.argv[6]))
-#
-#	if sys.argv[5] == "-p4":
-#		print "TODO"
-#	if sys.argv[6] == "-p5":
-#		g.P5()
-#	if sys.argv[7] == "-p6":
-#		if g.d[0] == "DIRECTED":
-#			print "TOD
+	if sys.argv[2] == "-p1":
+		if g.d[0] == "UNDIRECTED":
+			la = g.maTOla()
+			flag = g.P1(la, 0)
+			if flag ==[]:
+				print "P1: O grafo nao possui pontes"
+
+	if sys.argv[3] == "-p2":
+		if g.d[0] == "UNDIRECTED":
+			la = g.maTOla()
+			la1 = g.P1(la,0)
+			la2 = g.maTOla()
+			print 'P2: ',g.P2(la2,la1)
+
+	if sys.argv[4] == "-p3" and sys.argv[5] != "-p4" or sys.argv[6] != "-p5":
+		if sys.argv[5] != "-p4":
+			print g.P3(int(sys.argv[5]))
+		if sys.argv[6] != "-p5":
+			print g.P3(int(sys.argv[6]))
+	else:
+		print "P3: ", g.P3(0)
+
+	if sys.argv[5] == "-p4":
+		g.P4(g.ma)
+
+	if sys.argv[6] == "-p5":
+		g.P5()
+
+	if sys.argv[7] == "-p6":
+		if g.d[0] == "DIRECTED":
+			print "TODO"
